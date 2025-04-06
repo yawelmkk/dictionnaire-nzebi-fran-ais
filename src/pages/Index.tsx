@@ -33,17 +33,14 @@ const Index = () => {
   return (
     <Layout>
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-green-800 mb-2">Dictionnaire Nzébi-Français</h1>
-          <p className="text-gray-600">Trouvez la traduction des mots entre Nzébi et Français</p>
-        </div>
-        
         <SearchBar onSearch={handleSearch} />
         
-        <CategoryFilter 
-          selectedCategory={selectedCategory} 
-          onSelectCategory={handleCategorySelect} 
-        />
+        <div className="mb-4">
+          <CategoryFilter 
+            selectedCategory={selectedCategory} 
+            onSelectCategory={handleCategorySelect} 
+          />
+        </div>
         
         <div className="mt-6 pb-20">
           <WordsList entries={searchResults} />
