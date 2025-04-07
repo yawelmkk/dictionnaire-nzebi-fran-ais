@@ -32,6 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             size="sm" 
             variant="ghost" 
             className="p-1 bg-green-600 hover:bg-green-700 text-white rounded-md h-8 w-8 flex items-center justify-center"
+            aria-label="Rechercher"
           >
             <Search size={18} />
           </Button>

@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
-import { MoreVertical, Settings, User, Plus } from 'lucide-react';
+import { MoreVertical, Settings, User, Plus, BookOpen } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -39,6 +39,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               >
                 <User className="mr-2 h-4 w-4" />
                 <span>Admin</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="cursor-pointer flex items-center"
+                onClick={() => navigate('/categories')}
+              >
+                <BookOpen className="mr-2 h-4 w-4" />
+                <span>Catégories</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
                 className="cursor-pointer flex items-center"
