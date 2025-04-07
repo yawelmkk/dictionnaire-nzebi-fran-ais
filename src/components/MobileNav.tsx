@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Book, Search, User } from 'lucide-react';
+import { Book, Search } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export function MobileNav() {
@@ -30,16 +30,6 @@ export function MobileNav() {
         >
           <Book size={24} />
           <span className="text-xs mt-1">Catégories</span>
-        </button>
-        
-        <button
-          onClick={() => navigate('/admin')}
-          className={`flex flex-col items-center justify-center w-full h-full ${
-            isActive('/admin') ? 'text-green-700' : 'text-gray-500'
-          }`}
-        >
-          <User size={24} />
-          <span className="text-xs mt-1">Admin</span>
         </button>
       </div>
     </nav>
