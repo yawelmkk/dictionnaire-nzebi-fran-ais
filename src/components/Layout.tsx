@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
 import { MoreVertical, Settings, User, Plus, BookOpen } from 'lucide-react';
+import AddWordDialog from '@/components/AddWordDialog';
 
 interface LayoutProps {
   children: ReactNode;
@@ -47,12 +48,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <BookOpen className="mr-2 h-4 w-4" />
                 <span>Catégories</span>
               </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="cursor-pointer flex items-center"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Ajouter un mot</span>
-              </DropdownMenuItem>
+              <AddWordDialog
+                trigger={
+                  <DropdownMenuItem 
+                    className="cursor-pointer flex items-center"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    <span>Ajouter un mot</span>
+                  </DropdownMenuItem>
+                }
+              />
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer flex items-center">
                 <Settings className="mr-2 h-4 w-4" />
