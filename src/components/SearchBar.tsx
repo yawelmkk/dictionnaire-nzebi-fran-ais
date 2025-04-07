@@ -31,6 +31,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             type="submit" 
             size="sm" 
             variant="ghost" 
+            className="p-1 bg-green-600 hover:bg-green-700 text-white rounded-md h-8 w-8 flex items-center justify-center"
+          >
+            <Search size={18} />
+          </Button>
+          <Button 
+            type="button" 
+            size="sm" 
+            variant="ghost" 
             className="p-1 bg-blue-400 text-white rounded-md h-8 w-8 flex items-center justify-center"
           >
             <Languages size={18} />
