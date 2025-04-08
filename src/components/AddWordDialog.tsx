@@ -26,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { addWord, WordFormValues } from '@/services/wordsService';
+import { Save } from 'lucide-react';
 
 // Schema for form validation
 const formSchema = z.object({
@@ -189,6 +190,14 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => 
                 </FormItem>
               )}
             />
+            
+            <div className="flex justify-center pt-4">
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                <Save className="mr-2" />
+                {isSubmitting ? 'Enregistrement...' : 'Enregistrer le mot'}
+              </Button>
+            </div>
+            
             <DialogFooter className="pt-4">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Ajout en cours...' : 'Ajouter'}
