@@ -9,67 +9,38 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      favorites: {
-        Row: {
-          created_at: string | null
-          id: string
-          user_id: string
-          word_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          user_id: string
-          word_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          user_id?: string
-          word_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "favorites_word_id_fkey"
-            columns: ["word_id"]
-            isOneToOne: false
-            referencedRelation: "words"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       words: {
         Row: {
           created_at: string | null
+          created_by: string | null
           example_french: string | null
           example_nzebi: string | null
           french_word: string
           id: string
           nzebi_word: string
           part_of_speech: string
-          pronunciation_url: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
+          created_by?: string | null
           example_french?: string | null
           example_nzebi?: string | null
           french_word: string
           id?: string
           nzebi_word: string
           part_of_speech: string
-          pronunciation_url?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
+          created_by?: string | null
           example_french?: string | null
           example_nzebi?: string | null
           french_word?: string
           id?: string
           nzebi_word?: string
           part_of_speech?: string
-          pronunciation_url?: string | null
           updated_at?: string | null
         }
         Relationships: []
