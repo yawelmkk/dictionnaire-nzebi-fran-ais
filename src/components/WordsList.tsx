@@ -4,11 +4,6 @@ import { Star, ChevronDown, ChevronUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { categories } from '@/lib/dictionaryData';
 
-interface Example {
-  nzebi: string;
-  french: string;
-}
-
 interface Entry {
   id: string;
   nzebi_word: string;
