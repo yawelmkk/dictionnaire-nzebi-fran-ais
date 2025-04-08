@@ -1,14 +1,37 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
-import { getEntriesByCategory } from '@/lib/dictionaryData';
 import WordsList from '@/components/WordsList';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import AddWordDialog from '@/components/AddWordDialog';
+import { getWordsByCategory } from '@/services/wordsService';
+import { toast } from 'sonner';
 
 const VerbesPage = () => {
-  const verbes = getEntriesByCategory('verb');
+  const [verbes, setVerbes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchVerbs = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getWordsByCategory('verb');
+      setVerbes(data);
+    } catch (error) {
+      console.error('Error fetching verbs:', error);
+      toast.error('Erreur lors du chargement des verbes');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVerbs();
+  }, []);
+
+  const handleAddSuccess = () => {
+    fetchVerbs();
+  };
 
   return (
     <Layout>
@@ -24,9 +47,16 @@ const VerbesPage = () => {
                 <span>Ajouter un verbe</span>
               </Button>
             }
+            onSuccess={handleAddSuccess}
           />
         </div>
-        <WordsList entries={verbes} />
+        {isLoading ? (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">Chargement des verbes...</p>
+          </div>
+        ) : (
+          <WordsList entries={verbes} />
+        )}
       </div>
     </Layout>
   );

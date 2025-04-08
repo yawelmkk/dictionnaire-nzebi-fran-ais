@@ -1,11 +1,25 @@
 
 import React, { useState } from 'react';
-import { DictionaryEntry, getCategoryById } from '@/lib/dictionaryData';
 import { Star, ChevronDown, ChevronUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { categories } from '@/lib/dictionaryData';
+
+interface Example {
+  nzebi: string;
+  french: string;
+}
+
+interface Entry {
+  id: string;
+  nzebi_word: string;
+  french_word: string;
+  part_of_speech: string;
+  example_nzebi?: string;
+  example_french?: string;
+}
 
 interface WordsListProps {
-  entries: DictionaryEntry[];
+  entries: Entry[];
 }
 
 const WordsList: React.FC<WordsListProps> = ({ entries }) => {
@@ -27,11 +41,15 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
     }
   };
 
+  const getCategoryName = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId);
+    return category ? category.name : categoryId;
+  };
+
   return (
     <div className="space-y-4 pb-20">
       {entries.map((entry) => {
         const isExpanded = expandedEntry === entry.id;
-        const category = getCategoryById(entry.categoryId);
         
         return (
           <div 
@@ -44,7 +62,7 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
             >
               <div className="flex items-center">
                 <span className="text-lg font-medium text-gray-800">
-                  {entry.nzebi}
+                  {entry.nzebi_word}
                 </span>
                 {isExpanded ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
               </div>
@@ -57,16 +75,16 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
               <div className="px-4 pb-4 border-t border-gray-100">
                 <div className="mt-2">
                   <div className="flex justify-between items-center">
-                    <p className="text-gray-700">{entry.french}</p>
+                    <p className="text-gray-700">{entry.french_word}</p>
                     <Badge variant="outline" className="bg-green-100">
-                      {category?.name || entry.categoryId}
+                      {getCategoryName(entry.part_of_speech)}
                     </Badge>
                   </div>
                   
                   <div className="mt-3 pt-2 border-t border-gray-100">
                     <p className="font-semibold text-sm text-gray-700">Exemple:</p>
-                    <p className="italic text-sm text-gray-600">{entry.example.nzebi}</p>
-                    <p className="text-sm text-gray-600">{entry.example.french}</p>
+                    <p className="italic text-sm text-gray-600">{entry.example_nzebi}</p>
+                    <p className="text-sm text-gray-600">{entry.example_french}</p>
                   </div>
                 </div>
               </div>

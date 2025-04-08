@@ -25,7 +25,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { dictionaryEntries } from '@/lib/dictionaryData';
+import { addWord, WordFormValues } from '@/services/wordsService';
 
 // Schema for form validation
 const formSchema = z.object({
@@ -40,10 +40,12 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface AddWordDialogProps {
   trigger?: React.ReactNode;
+  onSuccess?: () => void;
 }
 
-const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger }) => {
+const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => {
   const [open, setOpen] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -56,34 +58,28 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger }) => {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    // Generate a new unique ID (simple implementation)
-    const newId = (dictionaryEntries.length + 1).toString();
-    
-    // Create a new dictionary entry
-    const newEntry = {
-      id: newId,
-      nzebi: data.nzebi,
-      french: data.french,
-      categoryId: data.categoryId,
-      example: {
-        nzebi: data.exampleNzebi,
-        french: data.exampleFrench,
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      await addWord(data);
+      
+      // Show success message
+      toast.success('Mot ajouté avec succès !');
+      
+      // Close the dialog and reset the form
+      setOpen(false);
+      form.reset();
+      
+      // Callback for parent component to refresh data
+      if (onSuccess) {
+        onSuccess();
       }
-    };
-    
-    // Add the new entry to the dictionary
-    dictionaryEntries.push(newEntry);
-    
-    // Show success message
-    toast.success('Mot ajouté avec succès !');
-    
-    // Log the updated dictionary (for debugging)
-    console.log('Dictionary updated:', dictionaryEntries);
-    
-    // Close the dialog and reset the form
-    setOpen(false);
-    form.reset();
+    } catch (error) {
+      console.error('Error submitting word:', error);
+      toast.error('Erreur lors de l\'ajout du mot.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -185,7 +181,9 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger }) => {
               )}
             />
             <DialogFooter className="pt-4">
-              <Button type="submit">Ajouter</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Ajout en cours...' : 'Ajouter'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
