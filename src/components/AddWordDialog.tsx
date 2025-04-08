@@ -61,7 +61,16 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      await addWord(data);
+      // Create a properly typed object that matches WordFormValues
+      const wordData: WordFormValues = {
+        nzebi: data.nzebi,
+        french: data.french,
+        categoryId: data.categoryId,
+        exampleNzebi: data.exampleNzebi,
+        exampleFrench: data.exampleFrench
+      };
+      
+      await addWord(wordData);
       
       // Show success message
       toast.success('Mot ajouté avec succès !');
