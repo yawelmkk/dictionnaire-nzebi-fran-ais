@@ -44,6 +44,7 @@ export const categories: Category[] = [
   },
 ];
 
+// Using an array for dictionary entries that can be modified
 export const dictionaryEntries: DictionaryEntry[] = [
   {
     id: '1',
@@ -166,4 +167,9 @@ export function getCategoryById(id: string): Category | undefined {
 
 export function getEntriesByCategory(categoryId: string): DictionaryEntry[] {
   return dictionaryEntries.filter(entry => entry.categoryId === categoryId);
+}
+
+// Add a new function to add entries to the dictionary
+export function addEntry(entry: DictionaryEntry): void {
+  dictionaryEntries.push(entry);
 }

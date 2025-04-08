@@ -25,6 +25,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { dictionaryEntries } from '@/lib/dictionaryData';
 
 // Schema for form validation
 const formSchema = z.object({
@@ -56,11 +57,29 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger }) => {
   });
 
   const onSubmit = (data: FormValues) => {
-    // In a real app, this is where you would save the data to your database
-    console.log('Form submitted:', data);
+    // Generate a new unique ID (simple implementation)
+    const newId = (dictionaryEntries.length + 1).toString();
+    
+    // Create a new dictionary entry
+    const newEntry = {
+      id: newId,
+      nzebi: data.nzebi,
+      french: data.french,
+      categoryId: data.categoryId,
+      example: {
+        nzebi: data.exampleNzebi,
+        french: data.exampleFrench,
+      }
+    };
+    
+    // Add the new entry to the dictionary
+    dictionaryEntries.push(newEntry);
     
     // Show success message
     toast.success('Mot ajouté avec succès !');
+    
+    // Log the updated dictionary (for debugging)
+    console.log('Dictionary updated:', dictionaryEntries);
     
     // Close the dialog and reset the form
     setOpen(false);
