@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -191,18 +190,10 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => 
               )}
             />
             
-            <div className="flex justify-center pt-4">
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                <Save className="mr-2" />
-                {isSubmitting ? 'Enregistrement...' : 'Enregistrer le mot'}
-              </Button>
-            </div>
-            
-            <DialogFooter className="pt-4">
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Ajout en cours...' : 'Ajouter'}
-              </Button>
-            </DialogFooter>
+            <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
+              <Save className="mr-2" />
+              {isSubmitting ? 'Enregistrement...' : 'Enregistrer le mot'}
+            </Button>
           </form>
         </Form>
       </DialogContent>
