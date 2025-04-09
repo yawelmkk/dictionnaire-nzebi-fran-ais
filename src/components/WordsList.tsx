@@ -1,8 +1,15 @@
 
 import React, { useState } from 'react';
-import { Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { Star, ChevronDown, ChevronUp, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { categories } from '@/lib/dictionaryData';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import VerbConjugator from './VerbConjugator';
 
 interface Entry {
   id: string;
@@ -19,6 +26,7 @@ interface WordsListProps {
 
 const WordsList: React.FC<WordsListProps> = ({ entries }) => {
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
+  const [selectedTense, setSelectedTense] = useState<Record<string, string>>({});
 
   if (entries.length === 0) {
     return (
@@ -45,6 +53,7 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
     <div className="space-y-4 pb-20">
       {entries.map((entry) => {
         const isExpanded = expandedEntry === entry.id;
+        const isVerb = entry.part_of_speech === 'verb';
         
         return (
           <div 
@@ -75,6 +84,68 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
                       {getCategoryName(entry.part_of_speech)}
                     </Badge>
                   </div>
+                  
+                  {isVerb && (
+                    <div className="mt-3 pt-2 border-t border-gray-100">
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-sm text-gray-700">Conjugaison:</p>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="flex items-center gap-1 text-sm px-2 py-1 rounded bg-gray-100 hover:bg-gray-200">
+                            <Clock className="h-3 w-3" />
+                            {selectedTense[entry.id] || 'Choisir un temps'}
+                            <ChevronDown className="ml-1 h-3 w-3" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="bg-white border rounded-md shadow-md z-50">
+                            <DropdownMenuItem 
+                              onClick={() => setSelectedTense({...selectedTense, [entry.id]: 'Présent'})}
+                              className="cursor-pointer"
+                            >
+                              Présent
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => setSelectedTense({...selectedTense, [entry.id]: 'Imparfait'})}
+                              className="cursor-pointer"
+                            >
+                              Imparfait
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => setSelectedTense({...selectedTense, [entry.id]: 'Futur'})}
+                              className="cursor-pointer"
+                            >
+                              Futur
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => setSelectedTense({...selectedTense, [entry.id]: 'Passé composé'})}
+                              className="cursor-pointer"
+                            >
+                              Passé composé
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => setSelectedTense({...selectedTense, [entry.id]: 'Conditionnel'})}
+                              className="cursor-pointer"
+                            >
+                              Conditionnel
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => setSelectedTense({...selectedTense, [entry.id]: 'Subjonctif'})}
+                              className="cursor-pointer"
+                            >
+                              Subjonctif
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      
+                      {selectedTense[entry.id] && (
+                        <div className="mt-2 p-3 bg-gray-50 rounded-md">
+                          <VerbConjugator 
+                            verb={entry.french_word} 
+                            tense={selectedTense[entry.id]} 
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   <div className="mt-3 pt-2 border-t border-gray-100">
                     <p className="font-semibold text-sm text-gray-700">Exemple:</p>

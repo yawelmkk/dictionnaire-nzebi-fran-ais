@@ -18,6 +18,7 @@ export type Database = {
           french_word: string
           id: string
           nzebi_word: string
+          part_of_speech: string | null
           updated_at: string | null
         }
         Insert: {
@@ -28,6 +29,7 @@ export type Database = {
           french_word: string
           id?: string
           nzebi_word: string
+          part_of_speech?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -38,6 +40,7 @@ export type Database = {
           french_word?: string
           id?: string
           nzebi_word?: string
+          part_of_speech?: string | null
           updated_at?: string | null
         }
         Relationships: []
