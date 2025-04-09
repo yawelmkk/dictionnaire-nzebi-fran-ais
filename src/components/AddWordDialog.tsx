@@ -61,7 +61,7 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      // Create a properly typed object that matches WordFormValues
+      // Créer un objet correctement typé qui correspond à WordFormValues
       const wordData: WordFormValues = {
         nzebi: data.nzebi,
         french: data.french,
@@ -72,14 +72,14 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => 
       
       await addWord(wordData);
       
-      // Show success message
+      // Afficher un message de succès
       toast.success('Mot ajouté avec succès !');
       
-      // Close the dialog and reset the form
+      // Fermer la boîte de dialogue et réinitialiser le formulaire
       setOpen(false);
       form.reset();
       
-      // Callback for parent component to refresh data
+      // Rappel pour le composant parent pour actualiser les données
       if (onSuccess) {
         onSuccess();
       }

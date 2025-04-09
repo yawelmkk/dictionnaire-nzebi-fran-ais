@@ -26,7 +26,7 @@ export const addWord = async (wordData: WordFormValues) => {
       throw error;
     }
 
-    return data;
+    return data || [];
   } catch (error) {
     console.error('Error adding word:', error);
     throw error;

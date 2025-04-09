@@ -31,6 +31,7 @@ const VerbesPage = () => {
 
   const handleAddSuccess = () => {
     fetchVerbs();
+    toast.success('Verbe ajouté avec succès!');
   };
 
   return (
