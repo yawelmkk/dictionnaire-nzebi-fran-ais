@@ -44,7 +44,7 @@ export const getWordsByCategory = async (category: string) => {
       throw error;
     }
 
-    return data;
+    return data || [];
   } catch (error) {
     console.error('Error fetching words by category:', error);
     throw error;
@@ -61,7 +61,7 @@ export const getAllWords = async () => {
       throw error;
     }
 
-    return data;
+    return data || [];
   } catch (error) {
     console.error('Error fetching all words:', error);
     throw error;
