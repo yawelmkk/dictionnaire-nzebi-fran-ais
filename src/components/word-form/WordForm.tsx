@@ -92,7 +92,7 @@ const WordForm = ({ defaultCategory = 'noun', onSubmit, isSubmitting }: WordForm
           name="exampleNzebi"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Exemple en Nzébi</FormLabel>
+              <FormLabel>Exemple en Nzébi (optionnel)</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder="Ex: Mwana a bakè na ndzo." 
@@ -109,7 +109,7 @@ const WordForm = ({ defaultCategory = 'noun', onSubmit, isSubmitting }: WordForm
           name="exampleFrench"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Exemple en Français</FormLabel>
+              <FormLabel>Exemple en Français (optionnel)</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder="Ex: L'enfant est rentré à la maison." 
