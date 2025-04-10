@@ -41,9 +41,10 @@ type FormValues = z.infer<typeof formSchema>;
 interface AddWordDialogProps {
   trigger?: React.ReactNode;
   onSuccess?: () => void;
+  defaultCategory?: string;
 }
 
-const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => {
+const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess, defaultCategory = 'noun' }) => {
   const [open, setOpen] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -52,7 +53,7 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => 
     defaultValues: {
       nzebi: '',
       french: '',
-      categoryId: 'noun', // Default category
+      categoryId: defaultCategory, 
       exampleNzebi: '',
       exampleFrench: '',
     },
@@ -77,7 +78,13 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({ trigger, onSuccess }) => 
       
       // Fermer la boîte de dialogue et réinitialiser le formulaire
       setOpen(false);
-      form.reset();
+      form.reset({
+        nzebi: '',
+        french: '',
+        categoryId: defaultCategory,
+        exampleNzebi: '',
+        exampleFrench: '',
+      });
       
       // Rappel pour le composant parent pour actualiser les données
       if (onSuccess) {

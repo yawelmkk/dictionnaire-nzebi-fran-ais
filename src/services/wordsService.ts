@@ -23,6 +23,7 @@ export const addWord = async (wordData: WordFormValues) => {
       .select();
 
     if (error) {
+      console.error('Erreur Supabase:', error);
       throw error;
     }
 
@@ -41,6 +42,7 @@ export const getWordsByCategory = async (category: string) => {
       .eq('part_of_speech', category);
 
     if (error) {
+      console.error('Erreur Supabase:', error);
       throw error;
     }
 
@@ -58,6 +60,7 @@ export const getAllWords = async () => {
       .select('*');
 
     if (error) {
+      console.error('Erreur Supabase:', error);
       throw error;
     }
 

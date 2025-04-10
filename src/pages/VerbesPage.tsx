@@ -49,6 +49,7 @@ const VerbesPage = () => {
               </Button>
             }
             onSuccess={handleAddSuccess}
+            defaultCategory="verb"
           />
         </div>
         {isLoading ? (
