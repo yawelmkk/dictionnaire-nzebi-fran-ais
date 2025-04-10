@@ -44,3 +44,22 @@ export const getAllWords = async () => {
     throw error;
   }
 };
+
+export const getWordsByCategory = async (categoryId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('words')
+      .select('*')
+      .eq('part_of_speech', categoryId);
+
+    if (error) {
+      console.error('Erreur Supabase:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching words by category:', error);
+    throw error;
+  }
+};
