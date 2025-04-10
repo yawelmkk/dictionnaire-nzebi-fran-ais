@@ -1,13 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-
-export interface WordFormValues {
-  nzebi: string;
-  french: string;
-  categoryId: string;
-  exampleNzebi: string;
-  exampleFrench: string;
-}
+import { WordFormValues } from "@/components/word-form/WordFormSchema";
 
 export const addWord = async (wordData: WordFormValues) => {
   try {
