@@ -12,6 +12,7 @@ export const addWord = async (wordData: WordFormValues) => {
         part_of_speech: wordData.categoryId,
         example_nzebi: wordData.exampleNzebi || null,
         example_french: wordData.exampleFrench || null,
+        // Ne pas inclure created_by puisque nous l'avons rendu nullable
       })
       .select();
 
