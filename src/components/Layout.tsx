@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MobileNav } from './MobileNav';
 import TabsNavigation from './TabsNavigation';
@@ -20,6 +20,34 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
+  const [settingsClickCount, setSettingsClickCount] = useState(0);
+  const [lastClickTime, setLastClickTime] = useState(0);
+  
+  // Reset click counter after 3 seconds of inactivity
+  useEffect(() => {
+    if (settingsClickCount > 0) {
+      const timer = setTimeout(() => {
+        setSettingsClickCount(0);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [settingsClickCount, lastClickTime]);
+  
+  const handleSettingsClick = () => {
+    const currentTime = Date.now();
+    setLastClickTime(currentTime);
+    
+    // Increment counter
+    const newCount = settingsClickCount + 1;
+    setSettingsClickCount(newCount);
+    
+    // After 10 clicks, redirect to add word page
+    if (newCount >= 10) {
+      navigate('/ajouter');
+      setSettingsClickCount(0); // Reset counter after redirect
+    }
+  };
   
   return (
     <div className="min-h-screen bg-slate-100">
@@ -62,10 +90,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem 
                 className="cursor-pointer flex items-center"
-                onClick={() => navigate('/ajouter')}
+                onClick={handleSettingsClick}
               >
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Paramètres</span>
+                {settingsClickCount > 0 && (
+                  <span className="ml-2 text-xs text-gray-400">
+                    {settingsClickCount}
+                  </span>
+                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
