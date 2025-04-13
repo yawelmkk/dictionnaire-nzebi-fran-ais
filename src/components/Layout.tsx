@@ -60,7 +60,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 }
               />
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer flex items-center">
+              <DropdownMenuItem 
+                className="cursor-pointer flex items-center"
+                onClick={() => navigate('/ajouter')}
+              >
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Paramètres</span>
               </DropdownMenuItem>
