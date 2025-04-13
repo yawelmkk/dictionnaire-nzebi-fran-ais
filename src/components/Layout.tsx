@@ -94,11 +94,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               >
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Paramètres</span>
-                {settingsClickCount > 0 && (
-                  <span className="ml-2 text-xs text-gray-400">
-                    {settingsClickCount}
-                  </span>
-                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

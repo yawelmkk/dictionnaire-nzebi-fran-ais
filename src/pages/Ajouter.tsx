@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { addWord } from '@/services/wordsService';
 import { WordFormValues } from '@/components/word-form/WordFormSchema';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 const Ajouter = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -24,12 +26,27 @@ const Ajouter = () => {
       setIsSubmitting(false);
     }
   };
+  
+  const handleBack = () => {
+    navigate('/');
+  };
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Ajouter un mot</h1>
-        <WordForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      <div className="max-w-md mx-auto">
+        <Button 
+          onClick={handleBack} 
+          variant="outline" 
+          className="mb-4 flex items-center"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Retour
+        </Button>
+        
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h1 className="text-2xl font-bold mb-6 text-center">Ajouter un mot</h1>
+          <WordForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        </div>
       </div>
     </Layout>
   );
