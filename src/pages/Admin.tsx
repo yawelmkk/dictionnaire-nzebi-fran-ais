@@ -6,9 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const Admin = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,9 +21,22 @@ const Admin = () => {
     });
   };
 
+  const handleBack = () => {
+    navigate('/');
+  };
+
   return (
     <Layout>
       <div className="max-w-md mx-auto pb-20">
+        <Button 
+          onClick={handleBack} 
+          variant="outline" 
+          className="mb-4 flex items-center"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Retour
+        </Button>
+        
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-green-800 mb-2">Admin</h1>
           <p className="text-gray-600">Accès réservé à l'administrateur</p>

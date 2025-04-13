@@ -15,8 +15,12 @@ const Index = () => {
     const fetchWords = async () => {
       try {
         const data = await getAllWords();
-        setAllWords(data);
-        setSearchResults(data);
+        // Sort words alphabetically by nzebi_word
+        const sortedData = [...data].sort((a, b) => 
+          a.nzebi_word.localeCompare(b.nzebi_word, 'fr')
+        );
+        setAllWords(sortedData);
+        setSearchResults(sortedData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching words:', error);

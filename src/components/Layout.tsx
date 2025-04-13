@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
-import { MoreVertical, Settings, User } from 'lucide-react';
+import { MoreVertical, Settings } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -41,10 +41,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const newCount = settingsClickCount + 1;
     setSettingsClickCount(newCount);
     
-    // After 10 clicks, redirect to add word page
+    // After 10 clicks, redirect to appropriate page based on count
     if (newCount >= 10) {
+      // Reset counter
+      setSettingsClickCount(0);
+      // Show options after 10 clicks
       navigate('/ajouter');
-      setSettingsClickCount(0); // Reset counter after redirect
     }
   };
   
@@ -61,14 +63,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 bg-white">
-              <DropdownMenuItem 
-                className="cursor-pointer flex items-center" 
-                onClick={() => navigate('/admin')}
-              >
-                <User className="mr-2 h-4 w-4" />
-                <span>Admin</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem 
                 className="cursor-pointer flex items-center"
                 onClick={handleSettingsClick}
