@@ -18,11 +18,11 @@ const Ajouter = () => {
     try {
       await addWord(data);
       toast.success('Mot ajouté avec succès!');
-      navigate('/');
+      // Reset form by refreshing component instead of navigating
+      setIsSubmitting(false);
     } catch (error) {
       console.error('Error adding word:', error);
       toast.error('Erreur lors de l\'ajout du mot');
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -40,7 +40,7 @@ const Ajouter = () => {
           className="mb-4 flex items-center"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Retour
+          Retour au menu principal
         </Button>
         
         <div className="bg-white rounded-lg shadow-md p-6">
@@ -53,3 +53,4 @@ const Ajouter = () => {
 };
 
 export default Ajouter;
+

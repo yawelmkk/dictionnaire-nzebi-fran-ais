@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Save } from 'lucide-react';
@@ -34,11 +33,21 @@ const WordForm = ({ defaultCategory = 'noun', onSubmit, isSubmitting }: WordForm
     },
   });
 
-  const handleSubmit = form.handleSubmit(onSubmit);
+  const handleSubmit = async (data: WordFormValues) => {
+    await onSubmit(data);
+    // Reset form after successful submission
+    form.reset({
+      nzebi: '',
+      french: '',
+      categoryId: defaultCategory,
+      exampleNzebi: '',
+      exampleFrench: '',
+    });
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="nzebi"
