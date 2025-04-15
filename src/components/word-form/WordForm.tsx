@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Save } from 'lucide-react';
@@ -21,7 +22,7 @@ interface WordFormProps {
   isSubmitting: boolean;
 }
 
-const WordForm = ({ defaultCategory = 'noun', onSubmit, isSubmitting }: WordFormProps) => {
+const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting }: WordFormProps) => {
   const form = useForm<WordFormValues>({
     resolver: zodResolver(wordFormSchema),
     defaultValues: {
@@ -85,6 +86,7 @@ const WordForm = ({ defaultCategory = 'noun', onSubmit, isSubmitting }: WordForm
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   {...field}
                 >
+                  <option value="uncategorized">Non catégorisé</option>
                   <option value="noun">Nom</option>
                   <option value="verb">Verbe</option>
                   <option value="adjective">Adjectif</option>

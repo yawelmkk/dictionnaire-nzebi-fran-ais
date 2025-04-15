@@ -1,4 +1,3 @@
-
 export interface DictionaryEntry {
   id: string;
   nzebi: string;
@@ -17,6 +16,11 @@ export interface Category {
 }
 
 export const categories: Category[] = [
+  {
+    id: 'uncategorized',
+    name: 'Non catégorisé',
+    description: 'Mots dont la catégorie n\'est pas encore définie'
+  },
   { 
     id: 'noun', 
     name: 'Nom', 
