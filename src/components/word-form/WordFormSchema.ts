@@ -8,6 +8,8 @@ export const wordFormSchema = z.object({
   categoryId: z.string().min(1, { message: "La catégorie est requise" }),
   exampleNzebi: z.string().optional(),
   exampleFrench: z.string().optional(),
+  synonyms: z.string().optional(),
+  pluralForm: z.string().optional(),
 });
 
 export type WordFormValues = z.infer<typeof wordFormSchema>;

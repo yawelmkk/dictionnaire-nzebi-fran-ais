@@ -31,6 +31,8 @@ const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting }:
       categoryId: defaultCategory,
       exampleNzebi: '',
       exampleFrench: '',
+      synonyms: '',
+      pluralForm: '',
     },
   });
 
@@ -43,6 +45,8 @@ const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting }:
       categoryId: defaultCategory,
       exampleNzebi: '',
       exampleFrench: '',
+      synonyms: '',
+      pluralForm: '',
     });
   };
 
@@ -98,6 +102,43 @@ const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting }:
             </FormItem>
           )}
         />
+        
+        {/* Nouveau champ pour la forme plurielle */}
+        <FormField
+          control={form.control}
+          name="pluralForm"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Forme plurielle (optionnel)</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Ex: bana (pour 'mwana')" 
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        {/* Nouveau champ pour les synonymes */}
+        <FormField
+          control={form.control}
+          name="synonyms"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Synonymes (optionnel)</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Ex: mwana munto, mwana ndomi (séparés par des virgules)" 
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         <FormField
           control={form.control}
           name="exampleNzebi"
