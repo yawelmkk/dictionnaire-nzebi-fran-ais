@@ -16,14 +16,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     onSearch(searchQuery);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setSearchQuery(newQuery);
+    onSearch(newQuery); // Recherche en temps réel
+  };
+
   return (
-    <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto mb-6">
+    <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto">
       <div className="relative flex items-center bg-white rounded-full p-1 border border-gray-300 shadow-sm">
         <Input
           type="text"
           placeholder="Rechercher un mot en Nzébi ou Français..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleInputChange}
           className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full pl-4"
         />
         <div className="flex items-center space-x-1 pr-2">

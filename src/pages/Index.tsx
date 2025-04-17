@@ -49,9 +49,12 @@ const Index = () => {
   return (
     <Layout>
       <div className="max-w-3xl mx-auto">
-        <SearchBar onSearch={handleSearch} />
+        {/* Sticky search bar container */}
+        <div className="sticky top-0 pt-2 pb-3 bg-slate-100 z-10">
+          <SearchBar onSearch={handleSearch} />
+        </div>
         
-        <div className="mt-6 pb-20">
+        <div className="mt-2 pb-20">
           {loading ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">Chargement des mots...</p>
