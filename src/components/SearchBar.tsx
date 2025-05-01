@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -23,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto">
+    <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto sticky top-0 z-10 bg-slate-100 py-2">
       <div className="relative flex items-center bg-white rounded-full p-1 border border-gray-300 shadow-sm">
         <Input
           type="text"
@@ -31,6 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           value={searchQuery}
           onChange={handleInputChange}
           className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full pl-4"
+          translate="no"
         />
         <div className="flex items-center space-x-1 pr-2">
           <Button 
@@ -41,22 +41,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             aria-label="Rechercher"
           >
             <Search size={18} />
-          </Button>
-          <Button 
-            type="button" 
-            size="sm" 
-            variant="ghost" 
-            className="p-1 bg-blue-400 text-white rounded-md h-8 w-8 flex items-center justify-center"
-          >
-            <Languages size={18} />
-          </Button>
-          <Button 
-            type="button" 
-            size="sm" 
-            variant="ghost" 
-            className="p-1 bg-white border border-gray-200 rounded-md h-8 w-8 flex items-center justify-center"
-          >
-            <img src="/lovable-uploads/a0b60ee2-a054-4897-9eb1-b1b10be935dd.png" alt="Flag" className="w-6 h-6" />
           </Button>
         </div>
       </div>

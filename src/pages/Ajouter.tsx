@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Layout from '@/components/Layout';
 import WordForm from '@/components/word-form/WordForm';
@@ -8,6 +7,7 @@ import { WordFormValues } from '@/components/word-form/WordFormSchema';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { categories } from '@/lib/dictionaryData';
 
 const Ajouter = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -45,7 +45,11 @@ const Ajouter = () => {
         
         <div className="bg-white rounded-lg shadow-md p-6">
           <h1 className="text-2xl font-bold mb-6 text-center">Ajouter un mot</h1>
-          <WordForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+          <WordForm 
+            onSubmit={handleSubmit} 
+            isSubmitting={isSubmitting} 
+            categories={categories}
+          />
         </div>
       </div>
     </Layout>

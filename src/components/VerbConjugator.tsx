@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface VerbConjugatorProps {
@@ -25,6 +24,11 @@ const VerbConjugator: React.FC<VerbConjugatorProps> = ({ verb, tense }) => {
     } else {
       return verb; // Unable to conjugate
     }
+
+    // Prepare stems for different tenses
+    const futurStem = isErVerb ? verb : (isIrVerb || isReVerb) ? verb.slice(0, -1) : verb;
+    const condStem = futurStem;
+    const participle = isErVerb ? `${stem}é` : isIrVerb ? `${stem}i` : `${stem}u`;
     
     // Conjugate based on tense
     switch (tense.toLowerCase()) {
@@ -43,15 +47,12 @@ const VerbConjugator: React.FC<VerbConjugatorProps> = ({ verb, tense }) => {
           `Je ${stem}ais\nTu ${stem}ais\nIl/Elle ${stem}ait\nNous ${stem}ions\nVous ${stem}iez\nIls/Elles ${stem}aient`;
       
       case 'futur':
-        const futurStem = isErVerb ? verb : (isIrVerb || isReVerb) ? verb.slice(0, -1) : verb;
         return `Je ${futurStem}ai\nTu ${futurStem}as\nIl/Elle ${futurStem}a\nNous ${futurStem}ons\nVous ${futurStem}ez\nIls/Elles ${futurStem}ont`;
       
       case 'passé composé':
-        const participle = isErVerb ? `${stem}é` : isIrVerb ? `${stem}i` : `${stem}u`;
         return `J'ai ${participle}\nTu as ${participle}\nIl/Elle a ${participle}\nNous avons ${participle}\nVous avez ${participle}\nIls/Elles ont ${participle}`;
       
       case 'conditionnel':
-        const condStem = isErVerb ? verb : (isIrVerb || isReVerb) ? verb.slice(0, -1) : verb;
         return `Je ${condStem}ais\nTu ${condStem}ais\nIl/Elle ${condStem}ait\nNous ${condStem}ions\nVous ${condStem}iez\nIls/Elles ${condStem}aient`;
       
       case 'subjonctif':

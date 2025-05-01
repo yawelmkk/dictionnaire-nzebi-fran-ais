@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import SearchBar from '@/components/SearchBar';
 import WordsList from '@/components/WordsList';
@@ -49,8 +48,7 @@ const Index = () => {
   return (
     <Layout>
       <div className="max-w-3xl mx-auto">
-        {/* Sticky search bar container */}
-        <div className="sticky top-0 pt-2 pb-3 bg-slate-100 z-10">
+        <div className="sticky top-[140px] z-40 bg-slate-100 py-2">
           <SearchBar onSearch={handleSearch} />
         </div>
         

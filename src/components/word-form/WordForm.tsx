@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,9 +19,11 @@ interface WordFormProps {
   defaultCategory?: string;
   onSubmit: (data: WordFormValues) => Promise<void>;
   isSubmitting: boolean;
+  initialValues?: Partial<WordFormValues>;
+  categories: { id: string; name: string; subcategories?: { id: string; name: string }[] }[];
 }
 
-const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting }: WordFormProps) => {
+const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting, initialValues, categories }: WordFormProps) => {
   const form = useForm<WordFormValues>({
     resolver: zodResolver(wordFormSchema),
     defaultValues: {
@@ -33,8 +34,34 @@ const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting }:
       exampleFrench: '',
       synonyms: '',
       pluralForm: '',
+      ...initialValues,
     },
   });
+
+  React.useEffect(() => {
+    if (initialValues) {
+      form.reset({
+        nzebi: initialValues.nzebi || '',
+        french: initialValues.french || '',
+        categoryId: initialValues.categoryId || defaultCategory,
+        exampleNzebi: initialValues.exampleNzebi || '',
+        exampleFrench: initialValues.exampleFrench || '',
+        synonyms: initialValues.synonyms || '',
+        pluralForm: initialValues.pluralForm || '',
+      });
+    } else {
+      form.reset({
+        nzebi: '',
+        french: '',
+        categoryId: defaultCategory,
+        exampleNzebi: '',
+        exampleFrench: '',
+        synonyms: '',
+        pluralForm: '',
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValues, defaultCategory]);
 
   const handleSubmit = async (data: WordFormValues) => {
     await onSubmit(data);
@@ -90,12 +117,18 @@ const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting }:
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   {...field}
                 >
-                  <option value="uncategorized">Non catégorisé</option>
-                  <option value="noun">Nom</option>
-                  <option value="verb">Verbe</option>
-                  <option value="adjective">Adjectif</option>
-                  <option value="adverb">Adverbe</option>
-                  <option value="pronoun">Pronom</option>
+                  {categories.map((category) => (
+                    <React.Fragment key={category.id}>
+                      <option value={category.id} className="font-semibold">
+                        {category.name}
+                      </option>
+                      {category.subcategories?.map((subcat) => (
+                        <option key={subcat.id} value={subcat.id} className="pl-4">
+                          {subcat.name}
+                        </option>
+                      ))}
+                    </React.Fragment>
+                  ))}
                 </select>
               </FormControl>
               <FormMessage />

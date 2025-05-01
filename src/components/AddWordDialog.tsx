@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -12,6 +11,7 @@ import { toast } from 'sonner';
 import { addWord } from '@/services/wordsService';
 import WordForm from './word-form/WordForm';
 import { WordFormValues } from './word-form/WordFormSchema';
+import { categories } from '@/lib/dictionaryData';
 
 interface AddWordDialogProps {
   trigger?: React.ReactNode;
@@ -68,6 +68,7 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({
           defaultCategory={defaultCategory}
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
+          categories={categories}
         />
       </DialogContent>
     </Dialog>
