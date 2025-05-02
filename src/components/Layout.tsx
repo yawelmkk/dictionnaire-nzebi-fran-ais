@@ -191,12 +191,48 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <header className="bg-[#374151] rounded-t-lg">
           <div className="flex items-center justify-between px-8 pt-8 pb-2">
             <h1 className="text-5xl font-bold italic text-white">Nzébi</h1>
-            <button
-              className="rounded-full bg-[#42506a] p-4 flex items-center justify-center"
-              onClick={handleVersionClick}
-            >
-              <MoreVertical className="text-white" size={28} />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="rounded-full bg-[#42506a] p-4 flex items-center justify-center"
+                >
+                  <MoreVertical className="text-white" size={28} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={handleSettingsClick}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Paramètres</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleAboutClick}>
+                  <Info className="mr-2 h-4 w-4" />
+                  <span>À propos</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleContactClick}>
+                  <Mail className="mr-2 h-4 w-4" />
+                  <span>Contactez-nous</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleUpdateClick}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  <span>Mise à jour</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={e => {
+                    e.preventDefault();
+                    handleVersionClick();
+                  }}
+                  style={{
+                    opacity: 0.5,
+                    cursor: 'pointer',
+                    pointerEvents: 'auto',
+                  }}
+                >
+                  <Tag className="mr-2 h-4 w-4" />
+                  <span>Version 1.0.0</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="flex justify-center pb-2">
             <span className="text-black text-2xl tracking-widest" style={{letterSpacing: '0.1em'}}>DICTIONNAIRE</span>
