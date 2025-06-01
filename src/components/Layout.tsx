@@ -62,7 +62,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     setSettingsClickCount(newCount);
     
     // After 10 clicks, redirect to appropriate page based on count
+<<<<<<< HEAD
     if (newCount >= 20) {
+=======
+    if (newCount >= 10) {
+>>>>>>> 5343716c28480d1acd93304c858b7d538508d7c2
       // Reset counter
       setSettingsClickCount(0);
       // Show options after 10 clicks
@@ -118,7 +122,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const handleVersionClick = () => {
     const newCount = versionClickCount + 1;
     setVersionClickCount(newCount);
+<<<<<<< HEAD
     if (newCount >= 20) {
+=======
+    if (newCount >= 10) {
+>>>>>>> 5343716c28480d1acd93304c858b7d538508d7c2
       setShowSecretModal(true);
       setVersionClickCount(0);
     }
@@ -204,6 +212,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Paramètres</span>
                 </DropdownMenuItem>
+<<<<<<< HEAD
                 <DropdownMenuItem onClick={() => {
                   toast.info(
                     <div style={{maxHeight: '60vh', overflowY: 'auto'}}>
@@ -269,6 +278,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Paramètres de confidentialité</span>
                 </DropdownMenuItem>
+=======
+>>>>>>> 5343716c28480d1acd93304c858b7d538508d7c2
                 <DropdownMenuItem onClick={handleAboutClick}>
                   <Info className="mr-2 h-4 w-4" />
                   <span>À propos</span>
