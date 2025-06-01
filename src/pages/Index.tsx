@@ -5,11 +5,8 @@ import Layout from '@/components/Layout';
 import { getAllWords } from '@/services/wordsService';
 import { toast } from 'sonner';
 
-<<<<<<< HEAD
 const normalize = (str: string) => str.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
 
-=======
->>>>>>> 5343716c28480d1acd93304c858b7d538508d7c2
 const Index = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [allWords, setAllWords] = useState([]);
@@ -41,20 +38,11 @@ const Index = () => {
       setSearchResults(allWords);
       return;
     }
-<<<<<<< HEAD
     const normalizedQuery = normalize(query);
     const filtered = allWords.filter(word => {
       return normalize(word.nzebi_word).includes(normalizedQuery) ||
              normalize(word.french_word).includes(normalizedQuery);
     });
-=======
-    
-    const filtered = allWords.filter(word => {
-      return word.nzebi_word.toLowerCase().includes(query.toLowerCase()) ||
-             word.french_word.toLowerCase().includes(query.toLowerCase());
-    });
-    
->>>>>>> 5343716c28480d1acd93304c858b7d538508d7c2
     setSearchResults(filtered);
   };
 
