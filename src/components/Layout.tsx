@@ -1,3 +1,4 @@
+
 import React, { ReactNode, useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MobileNav } from './MobileNav';
@@ -189,14 +190,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-slate-100">
       <div className="sticky top-0 z-50">
         <header className="bg-[#374151] rounded-t-lg">
-          <div className="flex items-center justify-between px-8 pt-8 pb-2">
-            <h1 className="text-5xl font-bold italic text-white">Nzébi</h1>
+          <div className="flex items-center justify-between px-6 pt-4 pb-1">
+            <h1 className="text-3xl font-bold italic text-white">Nzébi</h1>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="rounded-full bg-[#42506a] p-4 flex items-center justify-center"
+                  className="rounded-full bg-[#42506a] p-3 flex items-center justify-center"
                 >
-                  <MoreVertical className="text-white" size={28} />
+                  <MoreVertical className="text-white" size={20} />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -299,8 +300,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="flex justify-center pb-2">
-            <span className="text-black text-2xl tracking-widest" style={{letterSpacing: '0.1em'}}>DICTIONNAIRE</span>
+          <div className="flex justify-center pb-1">
+            <span className="text-black text-lg tracking-widest" style={{letterSpacing: '0.1em'}}>DICTIONNAIRE</span>
           </div>
           <div className="h-1 bg-yellow-400 w-[98%] mx-auto rounded" />
         </header>
