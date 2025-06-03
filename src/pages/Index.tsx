@@ -53,7 +53,7 @@ const Index = () => {
           <SearchBar onSearch={handleSearch} />
         </div>
         
-        <div className="mt-2 pb-20">
+        <div className="mt-2">
           {loading ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">Chargement des mots...</p>

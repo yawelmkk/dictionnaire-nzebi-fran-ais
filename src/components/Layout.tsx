@@ -310,7 +310,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      <MobileNav />
+      
 
       <Dialog open={showSecretModal} onOpenChange={setShowSecretModal}>
         <DialogContent className="max-w-2xl">

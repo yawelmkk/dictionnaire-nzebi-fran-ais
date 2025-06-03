@@ -43,7 +43,7 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
   };
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-4">
       {entries.map((entry) => {
         const isExpanded = expandedEntry === entry.id;
         const hasExamples = entry.example_nzebi || entry.example_french;
