@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/dictionnaire-nzebi-fran-ais/',
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
