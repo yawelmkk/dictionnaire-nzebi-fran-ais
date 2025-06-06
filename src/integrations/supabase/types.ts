@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      conjugations: {
+        Row: {
+          conjugation: string
+          id: string
+          language: string
+          pronoun: string
+          tense: string
+          verb_id: string | null
+        }
+        Insert: {
+          conjugation: string
+          id?: string
+          language: string
+          pronoun: string
+          tense: string
+          verb_id?: string | null
+        }
+        Update: {
+          conjugation?: string
+          id?: string
+          language?: string
+          pronoun?: string
+          tense?: string
+          verb_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conjugations_verb_id_fkey"
+            columns: ["verb_id"]
+            isOneToOne: false
+            referencedRelation: "words"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       favorites: {
         Row: {
           created_at: string | null
@@ -40,37 +75,46 @@ export type Database = {
       }
       words: {
         Row: {
-          created_at: string | null
           example_french: string | null
           example_nzebi: string | null
           french_word: string
           id: string
+          imperative: string | null
+          is_verb: boolean | null
           nzebi_word: string
           part_of_speech: string | null
+          plural_form: string | null
           pronunciation_url: string | null
-          updated_at: string | null
+          scientific_name: string | null
+          synonyms: string | null
         }
         Insert: {
-          created_at?: string | null
           example_french?: string | null
           example_nzebi?: string | null
           french_word: string
           id?: string
+          imperative?: string | null
+          is_verb?: boolean | null
           nzebi_word: string
           part_of_speech?: string | null
+          plural_form?: string | null
           pronunciation_url?: string | null
-          updated_at?: string | null
+          scientific_name?: string | null
+          synonyms?: string | null
         }
         Update: {
-          created_at?: string | null
           example_french?: string | null
           example_nzebi?: string | null
           french_word?: string
           id?: string
+          imperative?: string | null
+          is_verb?: boolean | null
           nzebi_word?: string
           part_of_speech?: string | null
+          plural_form?: string | null
           pronunciation_url?: string | null
-          updated_at?: string | null
+          scientific_name?: string | null
+          synonyms?: string | null
         }
         Relationships: []
       }
