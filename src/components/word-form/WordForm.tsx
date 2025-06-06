@@ -206,10 +206,19 @@ const WordForm = ({ defaultCategory = 'uncategorized', onSubmit, isSubmitting, i
             </FormItem>
           )}
         />
-        
-        <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
-          <Save className="mr-2" />
-          {isSubmitting ? 'Enregistrement...' : 'Enregistrer le mot'}
+
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Save className="mr-2 h-4 w-4 animate-spin" />
+              Enregistrement...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Enregistrer le mot
+            </>
+          )}
         </Button>
       </form>
     </Form>

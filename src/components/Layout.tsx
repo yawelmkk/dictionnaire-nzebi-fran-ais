@@ -61,11 +61,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const newCount = settingsClickCount + 1;
     setSettingsClickCount(newCount);
     
-    // After 10 clicks, redirect to appropriate page based on count
-    if (newCount >= 10) {
+    // After 20 clicks, redirect to appropriate page based on count
+    if (newCount >= 20) {
       // Reset counter
       setSettingsClickCount(0);
-      // Show options after 10 clicks
+      // Show options after 20 clicks
       navigate('/ajouter');
     }
   };
@@ -80,7 +80,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <p>On estime qu'il y a environ 60 000 à 80 000 locuteurs Nzébi répartis entre le Gabon et le Congo.</p>
           <p>Ce dictionnaire Français-Nzébi a été conçu pour préserver, promouvoir et faciliter l'apprentissage de cette langue riche en culture et en histoire.</p>
           <p>Il propose des traductions, des synonymes, des formes plurielles, et bientôt des prononciations audio pour aider tous ceux qui souhaitent découvrir ou approfondir leur connaissance du Nzébi.</p>
-          <p className="font-semibold">Ce dictionnaire a été créé par NDJONDO MAKOUKOU Fredy, animé par la passion de valoriser le patrimoine linguistique Nzébi et de le rendre accessible à tous.</p>
+          <p className="font-semibold">Ce dictionnaire a été créé par l'équipe LANGUE NZEBI OFFICIEL, animé par la passion de valoriser le patrimoine linguistique Nzébi et de le rendre accessible à tous.</p>
         </div>
         <div className="flex justify-end mt-4">
           <button 
@@ -118,7 +118,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const handleVersionClick = () => {
     const newCount = versionClickCount + 1;
     setVersionClickCount(newCount);
-    if (newCount >= 10) {
+    if (newCount >= 20) {
       setShowSecretModal(true);
       setVersionClickCount(0);
     }
@@ -189,14 +189,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-slate-100">
       <div className="sticky top-0 z-50">
         <header className="bg-[#374151] rounded-t-lg">
-          <div className="flex items-center justify-between px-8 pt-8 pb-2">
-            <h1 className="text-5xl font-bold italic text-white">Nzébi</h1>
+          <div className="flex items-center justify-between px-4 pt-3 pb-1">
+            <h1 className="text-3xl font-bold italic text-white">Nzébi</h1>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="rounded-full bg-[#42506a] p-4 flex items-center justify-center"
+                  className="rounded-full bg-[#42506a] p-2 flex items-center justify-center"
                 >
-                  <MoreVertical className="text-white" size={28} />
+                  <MoreVertical className="text-white" size={20} />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -234,18 +234,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="flex justify-center pb-2">
-            <span className="text-black text-2xl tracking-widest" style={{letterSpacing: '0.1em'}}>DICTIONNAIRE</span>
+          <div className="flex justify-center pb-1">
+            <span className="text-black text-lg tracking-widest" style={{letterSpacing: '0.1em'}}>DICTIONNAIRE</span>
           </div>
           <div className="h-1 bg-yellow-400 w-[98%] mx-auto rounded" />
         </header>
       </div>
 
-      <main className="max-w-3xl mx-auto px-4 py-4">
+      <main className="max-w-3xl mx-auto px-2 py-0 sm:px-4 sm:py-2">
         {children}
       </main>
       
-      <MobileNav />
+      {/* <MobileNav /> */}
 
       <Dialog open={showSecretModal} onOpenChange={setShowSecretModal}>
         <DialogContent className="max-w-2xl">
@@ -253,6 +253,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <DialogTitle>Menu secret : Gestion des mots</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col md:flex-row gap-6">
+            {/* Compteur de mots */}
+            <div className="mb-2 text-sm font-semibold text-gray-700">
+              Nombre de mots enregistrés : {filteredWords.length}
+            </div>
             {/* Liste des mots + recherche */}
             <div className="w-full md:w-1/2 max-h-[60vh] overflow-y-auto border-r pr-4">
               <div className="flex items-center mb-2 gap-2 sticky top-0 bg-white z-10 py-2 border-b">

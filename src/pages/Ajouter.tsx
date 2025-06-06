@@ -16,13 +16,17 @@ const Ajouter = () => {
   const handleSubmit = async (data: WordFormValues) => {
     setIsSubmitting(true);
     try {
-      await addWord(data);
-      toast.success('Mot ajouté avec succès!');
-      // Reset form by refreshing component instead of navigating
+      const result = await addWord(data);
+      console.log('Résultat Supabase:', result);
+      if (result && result.length > 0) {
+        toast.success('Mot ajouté avec succès!');
+      } else {
+        toast.error("Erreur : le mot n'a pas été ajouté (aucune donnée retournée)");
+      }
       setIsSubmitting(false);
-    } catch (error) {
-      console.error('Error adding word:', error);
-      toast.error('Erreur lors de l\'ajout du mot');
+    } catch (error: any) {
+      console.error('Erreur détaillée lors de l\'ajout du mot:', error);
+      toast.error(`Erreur Supabase : ${error.message || error}`);
       setIsSubmitting(false);
     }
   };

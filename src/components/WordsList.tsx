@@ -1,25 +1,41 @@
 import React, { useState } from 'react';
-import { Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { Star, ChevronDown, ChevronUp, Edit, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { categories } from '@/lib/dictionaryData';
+import { Word } from '@/services/wordsService';
+import AddWordDialog from './AddWordDialog';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-interface Entry {
-  id: string;
-  nzebi_word: string;
-  french_word: string;
-  part_of_speech: string;
-  example_nzebi?: string;
-  example_french?: string;
-  plural_form?: string;
-  synonyms?: string;
-}
+interface Entry extends Word {}
 
 interface WordsListProps {
   entries: Entry[];
+  onEditWord: (word: Entry) => void;
+  onDeleteWord: (id: string) => void;
 }
 
-const WordsList: React.FC<WordsListProps> = ({ entries }) => {
+const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord }) => {
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    // On peut utiliser localStorage ici si on veut persister les favoris
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('favorites');
+      return stored ? JSON.parse(stored) : [];
+    }
+    return [];
+  });
+
+  const toggleFavorite = (entryId: string) => {
+    setFavorites(prev => {
+      const updated = prev.includes(entryId)
+        ? prev.filter(id => id !== entryId)
+        : [...prev, entryId];
+      localStorage.setItem('favorites', JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   if (entries.length === 0) {
     return (
@@ -46,8 +62,9 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
     <div className="space-y-4 pb-20">
       {entries.map((entry) => {
         const isExpanded = expandedEntry === entry.id;
-        const hasExamples = entry.example_nzebi || entry.example_french;
-        
+        const hasExamples = (entry.example_nzebi && entry.example_nzebi.trim() !== '') || (entry.example_french && entry.example_french.trim() !== '');
+        const isFavorite = favorites.includes(entry.id);
+
         return (
           <div 
             key={entry.id} 
@@ -63,9 +80,15 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
                 </span>
                 {isExpanded ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
               </div>
-              <button className="text-yellow-400">
-                <Star size={24} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  className={isFavorite ? "text-yellow-400" : "text-gray-300"}
+                  onClick={e => { e.stopPropagation(); toggleFavorite(entry.id); }}
+                  title={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+                >
+                  <Star fill={isFavorite ? "#facc15" : "none"} size={24} />
+                </button>
+              </div>
             </div>
 
             {isExpanded && (
@@ -77,17 +100,26 @@ const WordsList: React.FC<WordsListProps> = ({ entries }) => {
                       {getCategoryName(entry.part_of_speech)}
                     </Badge>
                   </div>
-                  {entry.plural_form && (
-                    <div className="text-sm text-blue-800"><span className="font-semibold">Pluriel :</span> {entry.plural_form}</div>
+                  {entry.forme_plurielle && (
+                    <div className="text-sm text-blue-800"><span className="font-semibold">Pluriel :</span> {entry.forme_plurielle}</div>
                   )}
-                  {entry.synonyms && (
-                    <div className="text-sm text-purple-800"><span className="font-semibold">Synonymes :</span> {entry.synonyms}</div>
+                  {entry.synonymes && (
+                    <div className="text-sm text-purple-800"><span className="font-semibold">Synonymes :</span> {entry.synonymes}</div>
+                  )}
+                  {entry.scientific_name && (
+                    <div className="text-sm text-green-800"><span className="font-semibold">Nom scientifique :</span> {entry.scientific_name}</div>
+                  )}
+                  {entry.imperatif && (
+                    <div className="text-sm text-pink-800"><span className="font-semibold">Impératif :</span> {entry.imperatif}</div>
+                  )}
+                  {entry.url_prononciation && (
+                    <div className="text-sm text-gray-600"><span className="font-semibold">Prononciation :</span> <a href={entry.url_prononciation} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Écouter</a></div>
                   )}
                   {hasExamples && (
                     <div className="mt-3 pt-2 border-t border-gray-100">
                       <p className="font-bold text-sm text-gray-800 mb-1">Exemples :</p>
-                      {entry.example_nzebi && <p className="italic text-base text-green-900 leading-tight">{entry.example_nzebi}</p>}
-                      {entry.example_french && <p className="text-sm text-gray-600 leading-tight">{entry.example_french}</p>}
+                      {entry.example_nzebi && entry.example_nzebi.trim() !== '' && <p className="italic text-base text-green-900 leading-tight">{entry.example_nzebi}</p>}
+                      {entry.example_french && entry.example_french.trim() !== '' && <p className="text-sm text-gray-600 leading-tight">{entry.example_french}</p>}
                     </div>
                   )}
                 </div>

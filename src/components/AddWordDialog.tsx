@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { addWord } from '@/services/wordsService';
+import { addWord, editWord } from '@/services/wordsService';
 import WordForm from './word-form/WordForm';
 import { WordFormValues } from './word-form/WordFormSchema';
 import { categories } from '@/lib/dictionaryData';
@@ -17,12 +17,14 @@ interface AddWordDialogProps {
   trigger?: React.ReactNode;
   onSuccess?: () => void;
   defaultCategory?: string;
+  initialValues?: Partial<WordFormValues>;
 }
 
 const AddWordDialog: React.FC<AddWordDialogProps> = ({ 
   trigger, 
   onSuccess, 
-  defaultCategory = 'noun' 
+  defaultCategory = 'noun', 
+  initialValues,
 }) => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,21 +32,22 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({
   const handleSubmit = async (data: WordFormValues) => {
     setIsSubmitting(true);
     try {
-      await addWord(data);
-      
-      // Afficher un message de succès
-      toast.success('Mot ajouté avec succès !');
-      
-      // Fermer la boîte de dialogue
+      if (data.id) {
+        await editWord(data);
+        toast.success('Mot modifié avec succès !');
+      } else {
+        await addWord(data);
+        toast.success('Mot ajouté avec succès !');
+      }
+
       setOpen(false);
-      
-      // Rappel pour le composant parent pour actualiser les données
+
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      console.error('Error submitting word:', error);
-      toast.error('Erreur lors de l\'ajout du mot.');
+      console.error('Erreur lors de la soumission du mot:', error);
+      toast.error('Erreur lors de la soumission du mot.');
     } finally {
       setIsSubmitting(false);
     }
@@ -59,9 +62,11 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({
       ) : null}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ajouter un mot</DialogTitle>
+          <DialogTitle>{initialValues ? 'Modifier le mot' : 'Ajouter un mot'}</DialogTitle>
           <DialogDescription>
-            Complétez le formulaire pour ajouter un nouveau mot au dictionnaire.
+            {initialValues 
+              ? 'Modifiez les informations du mot existant.' 
+              : 'Complétez le formulaire pour ajouter un nouveau mot au dictionnaire.'}
           </DialogDescription>
         </DialogHeader>
         <WordForm 
@@ -69,6 +74,7 @@ const AddWordDialog: React.FC<AddWordDialogProps> = ({
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
           categories={categories}
+          initialValues={initialValues}
         />
       </DialogContent>
     </Dialog>
