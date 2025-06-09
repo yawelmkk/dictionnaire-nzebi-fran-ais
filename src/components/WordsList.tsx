@@ -178,13 +178,12 @@ const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord
 
       {editingWord && (
         <AddWordDialog
-          isOpen={!!editingWord}
-          onOpenChange={(open) => !open && setEditingWord(null)}
+          editingWord={editingWord}
+          onClose={() => setEditingWord(null)}
           onWordAdded={() => {
             setEditingWord(null);
             onEditWord(editingWord);
           }}
-          editingWord={editingWord}
         />
       )}
     </div>
