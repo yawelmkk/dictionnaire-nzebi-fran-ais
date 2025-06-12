@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Layout from '@/components/Layout';
 import WordForm from '@/components/word-form/WordForm';
@@ -17,16 +18,16 @@ const Ajouter = () => {
     setIsSubmitting(true);
     try {
       const result = await addWord(data);
-      console.log('Résultat Supabase:', result);
-      if (result && result.length > 0) {
+      console.log('Résultat ajout:', result);
+      if (result) {
         toast.success('Mot ajouté avec succès!');
       } else {
-        toast.error("Erreur : le mot n'a pas été ajouté (aucune donnée retournée)");
+        toast.error("Erreur : le mot n'a pas été ajouté");
       }
       setIsSubmitting(false);
     } catch (error: any) {
       console.error('Erreur détaillée lors de l\'ajout du mot:', error);
-      toast.error(`Erreur Supabase : ${error.message || error}`);
+      toast.error(`Erreur : ${error.message || error}`);
       setIsSubmitting(false);
     }
   };
@@ -61,4 +62,3 @@ const Ajouter = () => {
 };
 
 export default Ajouter;
-

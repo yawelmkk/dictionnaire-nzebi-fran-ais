@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Star, ChevronDown, ChevronUp, Edit, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +19,7 @@ interface WordsListProps {
 
 const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord }) => {
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
+  const [editingWord, setEditingWord] = useState<Entry | null>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
     // On peut utiliser localStorage ici si on veut persister les favoris
     if (typeof window !== 'undefined') {
@@ -58,6 +60,16 @@ const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord
     return category ? category.name : categoryId;
   };
 
+  const handleEditClick = (entry: Entry, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingWord(entry);
+  };
+
+  const handleDeleteClick = (entryId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDeleteWord(entryId);
+  };
+
   return (
     <div className="space-y-4">
       {entries.map((entry) => {
@@ -81,6 +93,41 @@ const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord
                 {isExpanded ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
               </div>
               <div className="flex items-center gap-2">
+                <button
+                  className="text-blue-600 hover:text-blue-800 p-1"
+                  onClick={(e) => handleEditClick(entry, e)}
+                  title="Modifier"
+                >
+                  <Edit size={18} />
+                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button
+                      className="text-red-600 hover:text-red-800 p-1"
+                      onClick={(e) => e.stopPropagation()}
+                      title="Supprimer"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Êtes-vous sûr de vouloir supprimer le mot "{entry.nzebi_word}" ? Cette action ne peut pas être annulée.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={() => onDeleteWord(entry.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        Supprimer
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
                 <button
                   className={isFavorite ? "text-yellow-400" : "text-gray-300"}
                   onClick={e => { e.stopPropagation(); toggleFavorite(entry.id); }}
@@ -128,6 +175,17 @@ const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord
           </div>
         );
       })}
+
+      {editingWord && (
+        <AddWordDialog
+          editingWord={editingWord}
+          onClose={() => setEditingWord(null)}
+          onWordAdded={() => {
+            setEditingWord(null);
+            onEditWord(editingWord);
+          }}
+        />
+      )}
     </div>
   );
 };
