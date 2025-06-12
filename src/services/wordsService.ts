@@ -76,6 +76,9 @@ export const getAllWords = async (): Promise<Word[]> => {
     console.log("Utilisation de dictionnaire.json comme source principale.");
     usingJsonDictionary = true;
 
+    // Effacer le localStorage pour éviter la fusion d'anciennes données Supabase
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+
     // Charger les modifications locales (ajouts/suppressions) et les fusionner
     const localChanges = loadWordsFromLocal();
     const mergedWords = new Map<string, Word>();
