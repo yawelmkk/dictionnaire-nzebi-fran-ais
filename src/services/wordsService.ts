@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { WordFormValues } from "@/components/word-form/WordFormSchema";
 import { categories } from "@/lib/dictionaryData";
@@ -13,13 +12,14 @@ export interface Word {
   example_french: string | null;
   url_prononciation: string | null;
   is_verb: boolean | null;
-  forme_plurielle: string | null;
-  synonymes: string | null;
+  plural_form: string | null;
+  synonyms: string | null;
   scientific_name: string | null;
-  imperatif: string | null;
+  imperative: string | null;
 }
 
 const LOCAL_STORAGE_KEY = 'nzebi_dictionary_words';
+let usingJsonDictionary = false;
 
 // Fonction pour charger les mots depuis localStorage
 const loadWordsFromLocal = (): Word[] => {
@@ -68,11 +68,7 @@ export const getAllWords = async (): Promise<Word[]> => {
   
   if (jsonWords.length > 0) {
     console.log("Utilisation de dictionnaire.json comme source principale.");
-    usingJsonDictionary = true;
-
-    // Effacer le localStorage pour éviter la fusion d'anciennes données Supabase
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-
+    
     // Charger les modifications locales (ajouts/suppressions) et les fusionner
     const localChanges = loadWordsFromLocal();
     const mergedWords = new Map<string, Word>();
@@ -113,10 +109,10 @@ export const getAllWords = async (): Promise<Word[]> => {
             example_french: dbWord.example_french,
             url_prononciation: dbWord.pronunciation_url || null,
             is_verb: null,
-            forme_plurielle: null,
-            synonymes: null,
+            plural_form: null,
+            synonyms: null,
             scientific_name: null,
-            imperatif: null,
+            imperative: null,
           }));
           saveWordsToLocal(supabaseWords);
           words = supabaseWords;
@@ -140,10 +136,10 @@ export const addWord = async (wordData: WordFormValues) => {
     example_french: wordData.exampleFrench || null,
     url_prononciation: wordData.urlPrononciation || null,
     is_verb: wordData.estVerbe || null,
-    forme_plurielle: wordData.pluralForm || null,
-    synonymes: wordData.synonyms || null,
+    plural_form: wordData.pluralForm || null,
+    synonyms: wordData.synonyms || null,
     scientific_name: wordData.scientificName || null,
-    imperatif: wordData.imperative || null,
+    imperative: wordData.imperative || null,
   };
 
   // Ajouter au localStorage pour persistance locale
@@ -169,10 +165,10 @@ export const editWord = async (wordData: WordFormValues) => {
     example_french: wordData.exampleFrench || null,
     url_prononciation: wordData.urlPrononciation || null,
     is_verb: wordData.estVerbe || null,
-    forme_plurielle: wordData.pluralForm || null,
-    synonymes: wordData.synonyms || null,
+    plural_form: wordData.pluralForm || null,
+    synonyms: wordData.synonyms || null,
     scientific_name: wordData.scientificName || null,
-    imperatif: wordData.imperative || null,
+    imperative: wordData.imperative || null,
   };
 
   // Modifier dans localStorage

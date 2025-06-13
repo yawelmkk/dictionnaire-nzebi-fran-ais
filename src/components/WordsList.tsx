@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Star, ChevronDown, ChevronUp, Edit, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -94,41 +93,6 @@ const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  className="text-blue-600 hover:text-blue-800 p-1"
-                  onClick={(e) => handleEditClick(entry, e)}
-                  title="Modifier"
-                >
-                  <Edit size={18} />
-                </button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <button
-                      className="text-red-600 hover:text-red-800 p-1"
-                      onClick={(e) => e.stopPropagation()}
-                      title="Supprimer"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Êtes-vous sûr de vouloir supprimer le mot "{entry.nzebi_word}" ? Cette action ne peut pas être annulée.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Annuler</AlertDialogCancel>
-                      <AlertDialogAction 
-                        onClick={() => onDeleteWord(entry.id)}
-                        className="bg-red-600 hover:bg-red-700"
-                      >
-                        Supprimer
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-                <button
                   className={isFavorite ? "text-yellow-400" : "text-gray-300"}
                   onClick={e => { e.stopPropagation(); toggleFavorite(entry.id); }}
                   title={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
@@ -142,22 +106,25 @@ const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord
               <div className="px-4 pb-4 border-t border-gray-100">
                 <div className="mt-2 space-y-2">
                   <div className="flex flex-wrap justify-between items-center mb-2 gap-2">
-                    <p className="text-lg text-gray-700 font-medium">Traduction : <span className="text-gray-900 font-semibold">{entry.french_word}</span></p>
+                    <p className="text-lg text-gray-700 font-medium">Traduction : <span className="text-2xl text-gray-900 font-semibold">{entry.french_word}</span></p>
                     <Badge variant="outline" className="bg-yellow-100 text-yellow-800 font-semibold text-xs px-2 py-1 rounded">
                       {getCategoryName(entry.part_of_speech)}
                     </Badge>
                   </div>
-                  {entry.forme_plurielle && (
-                    <div className="text-sm text-blue-800"><span className="font-semibold">Pluriel :</span> {entry.forme_plurielle}</div>
+                  {entry.plural_form && entry.plural_form.trim() !== '' && (
+                    <div className="text-lg text-blue-800"><span className="font-semibold">Pluriel :</span> <span className="text-xl">{entry.plural_form}</span></div>
                   )}
-                  {entry.synonymes && (
-                    <div className="text-sm text-purple-800"><span className="font-semibold">Synonymes :</span> {entry.synonymes}</div>
+                  {entry.synonyms && entry.synonyms.trim() !== '' && (
+                    <div className="text-lg text-purple-800"><span className="font-semibold">Synonymes :</span> <span className="text-xl">{entry.synonyms}</span></div>
                   )}
-                  {entry.scientific_name && (
+                  {entry.scientific_name && entry.scientific_name.trim() !== '' && (
                     <div className="text-sm text-green-800"><span className="font-semibold">Nom scientifique :</span> {entry.scientific_name}</div>
                   )}
-                  {entry.imperatif && (
-                    <div className="text-sm text-pink-800"><span className="font-semibold">Impératif :</span> {entry.imperatif}</div>
+                  {entry.imperative && entry.imperative.trim() !== '' && (
+                    <div className="text-lg text-pink-800"><span className="font-semibold">Impératif :</span> <span className="text-xl">{entry.imperative}</span></div>
+                  )}
+                  {(entry.is_verb === true || entry.is_verb === "VRAI" || entry.is_verb === "true") && (
+                    <div className="text-sm text-orange-800"><span className="font-semibold">Verbe</span></div>
                   )}
                   {entry.url_prononciation && (
                     <div className="text-sm text-gray-600"><span className="font-semibold">Prononciation :</span> <a href={entry.url_prononciation} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Écouter</a></div>
@@ -165,8 +132,8 @@ const WordsList: React.FC<WordsListProps> = ({ entries, onEditWord, onDeleteWord
                   {hasExamples && (
                     <div className="mt-3 pt-2 border-t border-gray-100">
                       <p className="font-bold text-sm text-gray-800 mb-1">Exemples :</p>
-                      {entry.example_nzebi && entry.example_nzebi.trim() !== '' && <p className="italic text-base text-green-900 leading-tight">{entry.example_nzebi}</p>}
-                      {entry.example_french && entry.example_french.trim() !== '' && <p className="text-sm text-gray-600 leading-tight">{entry.example_french}</p>}
+                      {entry.example_nzebi && entry.example_nzebi.trim() !== '' && <p className="italic text-xl text-green-900 leading-tight">{entry.example_nzebi}</p>}
+                      {entry.example_french && entry.example_french.trim() !== '' && <p className="text-lg text-gray-600 leading-tight">{entry.example_french}</p>}
                     </div>
                   )}
                 </div>
