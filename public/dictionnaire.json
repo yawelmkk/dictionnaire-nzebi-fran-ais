@@ -1470,20 +1470,6 @@
     "imperative": "fuukishi"
   },
   {
-    "id": "1a1af0ed-8249-44dc-9ae3-22a75508ec61",
-    "nzebi_word": "yónga",
-    "french_word": "être abimé, gaspillé.",
-    "part_of_speech": "verb",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "",
-    "synonyms": "",
-    "scientific_name": "",
-    "imperative": "yungi"
-  },
-  {
     "id": "1a359f16-4477-458f-988c-40abcf709995",
     "nzebi_word": "bwèèyesè",
     "french_word": "parfaire, purifier, rendre propre, arranger",
@@ -3304,20 +3290,6 @@
     "imperative": ""
   },
   {
-    "id": "3abb3de3-9b74-4358-8c72-6bfd4d8156be",
-    "nzebi_word": "YOSO",
-    "french_word": "cuire dans une feuille, griller.",
-    "part_of_speech": "verb",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "",
-    "synonyms": "",
-    "scientific_name": "",
-    "imperative": "yóshi."
-  },
-  {
     "id": "3af09bc3-8db9-4931-b12a-fe30865789b5",
     "nzebi_word": "muduki",
     "french_word": "celui qui suit, élève, disciple.",
@@ -4788,20 +4760,6 @@
     "imperative": ""
   },
   {
-    "id": "555aa78b-f4a5-48f7-8a16-2ad5be1a3580",
-    "nzebi_word": "Yóó",
-    "french_word": "entends, écoute",
-    "part_of_speech": "verb",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "",
-    "synonyms": "yogha",
-    "scientific_name": "",
-    "imperative": ""
-  },
-  {
     "id": "55a589be-1747-4803-8364-20bbe270b9c9",
     "nzebi_word": "ledyama /l'dyama",
     "french_word": "diamant recherché dans la région de Makongonyo.",
@@ -6023,7 +5981,7 @@
     "id": "69c651fa-3e04-4202-9a5a-626ff909785d",
     "nzebi_word": "yosolo",
     "french_word": "faire cuire pour quelqu'un.",
-    "part_of_speech": "verb",
+    "part_of_speech": "verbe",
     "example_nzebi": "",
     "example_french": "",
     "pronunciation_url": "",
@@ -6107,20 +6065,6 @@
     "id": "6ada3bb9-2b94-4d61-a858-df57574db478",
     "nzebi_word": "shyèètshi",
     "french_word": "régime de noix de palmes.",
-    "part_of_speech": "uncategorized",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "",
-    "synonyms": "",
-    "scientific_name": "",
-    "imperative": ""
-  },
-  {
-    "id": "6aee75f4-6e83-462f-9571-f73e7f2511d3",
-    "nzebi_word": "yóónga",
-    "french_word": "de même âge.",
     "part_of_speech": "uncategorized",
     "example_nzebi": "",
     "example_french": "",
@@ -10052,20 +9996,6 @@
     "imperative": "dushili"
   },
   {
-    "id": "acf0f36d-c23b-4c98-aa14-2a55d7f61881",
-    "nzebi_word": "yoto",
-    "french_word": "se chauffer au feu,",
-    "part_of_speech": "verb",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "",
-    "synonyms": "",
-    "scientific_name": "",
-    "imperative": ""
-  },
-  {
     "id": "ad0bea70-1a43-4d20-bcb1-bb437f190647",
     "nzebi_word": "baaka",
     "french_word": "baillement",
@@ -13832,20 +13762,6 @@
     "imperative": ""
   },
   {
-    "id": "f296f484-7565-4668-adb4-cdf6bb8c8a69",
-    "nzebi_word": "yombo",
-    "french_word": "grand arbre, à bois blanc, qui sert à faire les masques.",
-    "part_of_speech": "uncategorized",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "bayombo",
-    "synonyms": "",
-    "scientific_name": "",
-    "imperative": ""
-  },
-  {
     "id": "f3223993-4a92-43ad-bec5-49d4e9d3a803",
     "nzebi_word": "yabesa",
     "french_word": "faire savoir, reconnaître.",
@@ -15806,20 +15722,6 @@
     "imperative": ""
   },
   {
-    "id": "5b1d2e5d-f118-4f27-97d8-90cb8b8ac1c2",
-    "nzebi_word": "yóngesa",
-    "french_word": "gaspiller, fatiguer quelqu'un,",
-    "part_of_speech": "uncategorized",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "",
-    "synonyms": "",
-    "scientific_name": "",
-    "imperative": "yungishi"
-  },
-  {
     "id": "5baa7e7f-f9a9-4438-ac49-e3c17793dcda",
     "nzebi_word": "muyóngi ",
     "french_word": "place profonde et dangereuse.",
@@ -17372,20 +17274,6 @@
     "synonyms": "",
     "scientific_name": "",
     "imperative": ""
-  },
-  {
-    "id": "c554b40f-90ae-4e8d-a4c1-d54309250258",
-    "nzebi_word": "yoto ",
-    "french_word": "se chauffer au feu.",
-    "part_of_speech": "verb",
-    "example_nzebi": "",
-    "example_french": "",
-    "pronunciation_url": "",
-    "is_verb": "FAUX",
-    "plural_form": "",
-    "synonyms": "",
-    "scientific_name": "",
-    "imperative": "yóti. "
   },
   {
     "id": "c5b9b7ea-d406-4f04-a902-85c50105ccf0",
