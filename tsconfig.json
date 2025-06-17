@@ -5,15 +5,34 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "strictNullChecks": false
+    }
+  },
+  "include": ["src", ".eslintrc.cjs", "vite.config.ts", "tailwind.config.ts", "postcss.config.js", "supabase/functions/**/*.ts"],
+  "deno": {
+    "enable": true,
+    "lint": true,
+    "importMap": "./deno.json",
+    "compilerOptions": {
+      "lib": ["deno.ns", "deno.unstable"],
+      "jsx": "react-jsx"
+    }
   }
 }

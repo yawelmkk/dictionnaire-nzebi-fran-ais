@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { WordFormValues } from "@/components/word-form/WordFormSchema";
 import { categories } from "@/lib/dictionaryData";
+import { createClient } from "@supabase/supabase-js"; // Supposons que vous ayez besoin de createClient pour supabase_functions_url
 
 // Définition de l'interface Word avec tous les champs spécifiés
 export interface Word {
@@ -20,6 +21,8 @@ export interface Word {
 
 const LOCAL_STORAGE_KEY = 'nzebi_dictionary_words';
 let usingJsonDictionary = false;
+
+const SUPABASE_FUNCTIONS_URL = "https://thymkjtnggytmiemzenp.supabase.co/functions/v1"; // REMPLACEZ PAR VOTRE URL RÉELLE DE SUPABASE FUNCTIONS
 
 // Fonction pour charger les mots depuis localStorage
 const loadWordsFromLocal = (): Word[] => {
@@ -45,50 +48,49 @@ const saveWordsToLocal = (words: Word[]) => {
   }
 };
 
-// Fonction pour charger le dictionnaire depuis dictionnaire.json
-const loadJsonDictionary = async (): Promise<Word[]> => {
+// Nouvelle implémentation utilisant la fonction Edge Supabase
+const loadWordsFromEdgeFunction = async (lettre?: string): Promise<Word[]> => {
+  let url = `${SUPABASE_FUNCTIONS_URL}/get-dictionnaire`;
+  if (lettre) {
+    url += `?lettre=${lettre}`;
+  }
+
   try {
-    const response = await fetch('/dictionnaire.json');
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        // 'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY, // Cette ligne est maintenant commentée ou supprimée
+      },
+    });
     if (!response.ok) {
-      console.log("Fichier dictionnaire.json non trouvé ou inaccessible.");
+      console.error(`Erreur de la fonction Edge: ${response.status} ${response.statusText}`);
       return [];
     }
     const data = await response.json();
-    console.log("Dictionnaire.json chargé avec succès:", data.length, "mots");
     return data as Word[];
   } catch (error) {
-    console.error("Erreur lors du chargement de dictionnaire.json:", error);
+    console.error("Erreur lors de l'appel de la fonction Edge get-dictionnaire:", error);
     return [];
   }
 };
 
 export const getAllWords = async (): Promise<Word[]> => {
-  // Charger d'abord le dictionnaire.json comme source principale
-  const jsonWords = await loadJsonDictionary();
+  // Charger les mots via la nouvelle fonction Edge
+  const wordsFromEdge = await loadWordsFromEdgeFunction();
   
-  if (jsonWords.length > 0) {
-    console.log("Utilisation de dictionnaire.json comme source principale.");
-    
-    // Charger les modifications locales (ajouts/suppressions) et les fusionner
-    const localChanges = loadWordsFromLocal();
-    const mergedWords = new Map<string, Word>();
-
-    // Ajouter d'abord les mots du JSON
-    jsonWords.forEach(word => mergedWords.set(word.id, word));
-
-    // Ensuite, appliquer les modifications locales (priorité au local)
-    localChanges.forEach(word => mergedWords.set(word.id, word));
-
-    return Array.from(mergedWords.values());
+  if (wordsFromEdge.length > 0) {
+    console.log("Utilisation de la fonction Edge comme source principale.");
+    // Vous pouvez toujours implémenter une logique de fusion avec localStorage si nécessaire pour les ajouts/modifications locales.
+    // Pour l'instant, nous retournons simplement les mots de la fonction Edge.
+    return wordsFromEdge;
   } else {
-    // Si dictionnaire.json n'est pas présent, charger depuis localStorage puis Supabase
-    console.log("dictionnaire.json non trouvé, bascule vers localStorage puis Supabase.");
-    
-    let words = loadWordsFromLocal();
+    // Si la fonction Edge échoue, vous pouvez revenir à Supabase Database directement (ou localStorage si vous le conservez)
+    console.log("La fonction Edge n'a pas renvoyé de mots. Bascule vers Supabase Database.");
+    let words = loadWordsFromLocal(); // Conserver cette ligne si vous voulez garder la persistance locale
 
     if (words.length === 0) {
       try {
-        console.log("LocalStorage vide, chargement depuis Supabase...");
+        console.log("LocalStorage vide, chargement depuis Supabase Database...");
         const { data, error } = await supabase
           .from('words')
           .select('*');
@@ -99,7 +101,6 @@ export const getAllWords = async (): Promise<Word[]> => {
         }
 
         if (data) {
-          // Mappage des données Supabase vers l'interface Word
           const supabaseWords: Word[] = data.map(dbWord => ({
             id: dbWord.id,
             nzebi_word: dbWord.nzebi_word,
@@ -211,4 +212,9 @@ export const getCategoryName = (categoryId: string) => {
   }
 
   return categoryId;
+};
+
+// Assurez-vous d'exporter la fonction si elle doit être utilisée ailleurs, par exemple pour le filtrage par lettre
+export const getWordsByLetter = async (lettre: string): Promise<Word[]> => {
+  return loadWordsFromEdgeFunction(lettre);
 };
