@@ -4,24 +4,53 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
+.pnpm-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Diagnostic reports (https://nodejs.org/api/report.html)
+.report/
+
+# Runtime data
+.vscode-test
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Vite-specific output (https://vitejs.dev/guide/build.html#build-options)
+/dist/
+/dist-ssr/
+/.vite/
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
+.vs/
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.bak
+*.user
+*.config.user
+*.cs
+
+# Local .env files
+.env
+.env.*
+!.env.production
+!.env.staging
+
+# OSX
+.DS_Store
+
+# dictionnaire.json
+public/dictionnaire.json
 
 # Environment variables
 .env
