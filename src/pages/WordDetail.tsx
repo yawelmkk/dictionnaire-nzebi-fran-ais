@@ -215,7 +215,7 @@ export default function WordDetail() {
               <div className="flex items-center gap-3 p-3 rounded-lg bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/30">
                 <LinkIcon size={18} className="text-nzebi-primary dark:text-nzebi-accent" />
                 <a
-                  href={word.url_prononciation}
+                  href={word.url_prononciation || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium text-nzebi-primary dark:text-nzebi-accent hover:underline"

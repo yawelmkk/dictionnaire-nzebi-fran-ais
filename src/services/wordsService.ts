@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { WordFormValues } from "@/components/word-form/WordFormSchema";
-import { categories, getCategoryName } from "@/lib/dictionaryData";
+// import { categories, getCategoryName } from "@/lib/dictionaryData"; // Commenté car non utilisé
 // import { createClient } from "@supabase/supabase-js"; // Not used if Edge Function is commented out
 
 // Définition de l'interface Word avec tous les champs spécifiés

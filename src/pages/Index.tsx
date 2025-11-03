@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllWords, Word } from '@/services/wordsService';
-import { categories, getCategoryName } from '@/lib/dictionaryData';
+import { getCategoryName } from '@/lib/dictionaryData';
 import { Search, ChevronRight, Star } from 'lucide-react';
 
 interface IndexProps {
@@ -10,7 +10,6 @@ interface IndexProps {
 
 export default function Index({ searchTerm }: IndexProps) {
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [words, setWords] = useState<Word[]>([]);
   const [filteredWords, setFilteredWords] = useState<Word[]>([]);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -22,7 +21,7 @@ export default function Index({ searchTerm }: IndexProps) {
 
   useEffect(() => {
     filterWords();
-  }, [selectedCategory, searchTerm, words]);
+  }, [searchTerm, words]);
 
   const loadWords = async () => {
     const data = await getAllWords();
@@ -49,10 +48,6 @@ export default function Index({ searchTerm }: IndexProps) {
 
   const filterWords = () => {
     let filtered = words;
-
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(word => word.part_of_speech === selectedCategory);
-    }
 
     if (searchTerm) {
       filtered = filtered.filter(
