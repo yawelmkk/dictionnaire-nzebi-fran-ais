@@ -29,8 +29,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Build (GitHub Pages mode)
+        run: npm run build -- --mode gh
 
       - name: Create 404.html for SPA routing
         run: cp dist/index.html dist/404.html

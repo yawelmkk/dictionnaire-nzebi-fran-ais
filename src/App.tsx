@@ -8,8 +8,11 @@ import NotFound from '@/pages/NotFound';
 import { useState } from 'react';
 
 function App() {
-  // Utiliser le basename uniquement en production (pour GitHub Pages)
-  const basename = import.meta.env.PROD ? '/dictionnaire-nzebi-fran-ais' : '/';
+  // Utiliser l'URL de base fournie par Vite pour tous les environnements
+  // Réduire la barre finale pour éviter les doublons dans React Router
+  const basename = (import.meta as any).env?.BASE_URL
+    ? (import.meta as any).env.BASE_URL.replace(/\/$/, '')
+    : '/';
   const [searchTerm, setSearchTerm] = useState('');
   
   return (
