@@ -26,15 +26,50 @@
       font-size: 16px; /* Évite le zoom automatique sur iOS */
     }
   }
+
+  /* Optimisations de performance pour mobile */
+  @media (max-width: 768px) {
+    * {
+      /* Réduire les animations sur mobile */
+      animation-duration: 0.15s !important;
+      transition-duration: 0.15s !important;
+    }
+
+    /* Désactiver les animations complexes sur mobile */
+    .animate-fade-in {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+  }
 }
 
 @layer components {
   /* Style pour les cartes modernes avec micro-interaction */
   .card-modern {
-    @apply bg-white rounded-2xl shadow-soft transition-all duration-300 
-           hover:shadow-card-hover hover:-translate-y-1 border border-transparent
-           dark:bg-nzebi-surface-dark dark:shadow-none dark:hover:shadow-card-hover
+    @apply bg-white rounded-2xl shadow-soft border border-transparent
+           dark:bg-nzebi-surface-dark dark:shadow-none
            dark:border-nzebi-surface-dark/50;
+    /* Optimisations pour mobile */
+    will-change: transform;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 200px;
+    /* Transitions optimisées - désactivées sur mobile pour meilleures performances */
+    transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+  }
+
+  /* Hover uniquement sur desktop */
+  @media (hover: hover) and (pointer: fine) {
+    .card-modern {
+      @apply hover:shadow-card-hover hover:-translate-y-1 dark:hover:shadow-card-hover;
+    }
+  }
+
+  /* Sur mobile, désactiver les transitions lourdes */
+  @media (max-width: 768px) {
+    .card-modern {
+      transition: none;
+      will-change: auto;
+    }
   }
 
   /* Input de recherche moderne */
