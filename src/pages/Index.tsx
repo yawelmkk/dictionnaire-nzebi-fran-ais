@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllWords, Word } from '@/services/wordsService';
+import { getWordsPaginated, Word } from '@/services/wordsService';
 import { getCategoryName } from '@/lib/dictionaryData';
-import { Search, ChevronRight, Star } from 'lucide-react';
+import { Search, ChevronRight, Star, Loader2 } from 'lucide-react';
 
 interface IndexProps {
   searchTerm: string;
@@ -11,29 +11,123 @@ interface IndexProps {
 export default function Index({ searchTerm }: IndexProps) {
   const navigate = useNavigate();
   const [words, setWords] = useState<Word[]>([]);
-  const [filteredWords, setFilteredWords] = useState<Word[]>([]);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentOffset, setCurrentOffset] = useState(0);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const observerTarget = useRef<HTMLDivElement>(null);
+  const isLoadingRef = useRef(false);
+  const hasMoreRef = useRef(true);
 
-  useEffect(() => {
-    loadWords();
-    loadFavorites();
-  }, []);
-
-  useEffect(() => {
-    filterWords();
-  }, [searchTerm, words]);
-
-  const loadWords = async () => {
-    const data = await getAllWords();
-    setWords(data);
-  };
-
+  // Définir toutes les fonctions AVANT les useEffect qui les utilisent
   const loadFavorites = () => {
     const stored = localStorage.getItem('nzebi_favorites');
     if (stored) {
       setFavorites(new Set(JSON.parse(stored)));
     }
   };
+
+  const loadInitialWords = async () => {
+    setIsLoading(true);
+    isLoadingRef.current = true;
+    setIsInitialLoad(true);
+    try {
+      const result = await getWordsPaginated(0, 50, searchTerm);
+      setWords(result.words);
+      setHasMore(result.hasMore);
+      hasMoreRef.current = result.hasMore;
+      setCurrentOffset(50);
+    } catch (error) {
+      console.error('Erreur lors du chargement initial:', error);
+    } finally {
+      setIsLoading(false);
+      isLoadingRef.current = false;
+      setIsInitialLoad(false);
+    }
+  };
+
+  const resetAndLoadWords = async () => {
+    setIsLoading(true);
+    isLoadingRef.current = true;
+    setCurrentOffset(0);
+    try {
+      const result = await getWordsPaginated(0, 50, searchTerm);
+      setWords(result.words);
+      setHasMore(result.hasMore);
+      hasMoreRef.current = result.hasMore;
+      setCurrentOffset(50);
+    } catch (error) {
+      console.error('Erreur lors du rechargement:', error);
+    } finally {
+      setIsLoading(false);
+      isLoadingRef.current = false;
+    }
+  };
+
+  const loadMoreWords = useCallback(async () => {
+    // Vérifier l'état actuel via les refs pour éviter les problèmes de dépendances
+    if (isLoadingRef.current || !hasMoreRef.current) return;
+
+    isLoadingRef.current = true;
+    setIsLoading(true);
+    
+    try {
+      const result = await getWordsPaginated(currentOffset, 100, searchTerm);
+      setWords((prevWords) => [...prevWords, ...result.words]);
+      setHasMore(result.hasMore);
+      hasMoreRef.current = result.hasMore;
+      setCurrentOffset((prevOffset) => prevOffset + 100);
+    } catch (error) {
+      console.error('Erreur lors du chargement supplémentaire:', error);
+    } finally {
+      setIsLoading(false);
+      isLoadingRef.current = false;
+    }
+  }, [currentOffset, searchTerm]);
+
+  // Charger les favoris au montage
+  useEffect(() => {
+    loadFavorites();
+  }, []);
+
+  // Charger les 50 premiers mots au montage
+  useEffect(() => {
+    loadInitialWords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Réinitialiser et recharger quand le terme de recherche change
+  useEffect(() => {
+    if (!isInitialLoad) {
+      resetAndLoadWords();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+
+  // Observer pour détecter l'arrivée en bas de page
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Utiliser les refs pour vérifier l'état actuel sans dépendances
+        if (entries[0].isIntersecting && hasMoreRef.current && !isLoadingRef.current) {
+          loadMoreWords();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [loadMoreWords]);
 
   const toggleFavorite = (wordId: string) => {
     const newFavorites = new Set(favorites);
@@ -46,28 +140,11 @@ export default function Index({ searchTerm }: IndexProps) {
     localStorage.setItem('nzebi_favorites', JSON.stringify([...newFavorites]));
   };
 
-  const filterWords = () => {
-    let filtered = words;
-
-    if (searchTerm) {
-      filtered = filtered.filter(
-        word =>
-          word.nzebi_word.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          word.french_word.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    setFilteredWords(filtered);
-  };
-
   return (
     <div className="space-y-6 animate-fade-in pt-6">
-      {/* Barre de recherche moderne */}
-      {/* This is now in Layout.tsx */}
-
       {/* Liste des résultats */}
       <div className="space-y-3">
-        {filteredWords.map((word, index) => (
+        {words.map((word, index) => (
           <div
             key={word.id}
             className="card-modern p-5 cursor-pointer animate-fade-in group"
@@ -126,8 +203,32 @@ export default function Index({ searchTerm }: IndexProps) {
         ))}
       </div>
 
+      {/* Indicateur de chargement et cible pour l'Intersection Observer */}
+      {isLoading && isInitialLoad && (
+        <div className="text-center py-8">
+          <Loader2 className="w-8 h-8 animate-spin text-nzebi-primary dark:text-nzebi-accent mx-auto" />
+          <p className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary mt-2">
+            Chargement...
+          </p>
+        </div>
+      )}
+
+      {/* Cible pour l'Intersection Observer (chargement infini) */}
+      {hasMore && !isInitialLoad && (
+        <div ref={observerTarget} className="py-4">
+          {isLoading && (
+            <div className="text-center">
+              <Loader2 className="w-6 h-6 animate-spin text-nzebi-primary dark:text-nzebi-accent mx-auto" />
+              <p className="text-sm text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary mt-2">
+                Chargement de plus de mots...
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Message vide */}
-      {filteredWords.length === 0 && (
+      {words.length === 0 && !isLoading && (
         <div className="text-center py-16">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-nzebi-primary/10 dark:bg-nzebi-accent/20 flex items-center justify-center">
             <Search size={40} className="text-nzebi-primary dark:text-nzebi-accent" />
@@ -136,7 +237,16 @@ export default function Index({ searchTerm }: IndexProps) {
             Aucun mot trouvé
           </p>
           <p className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary text-sm mt-2">
-            Essayez avec un autre terme de recherche
+            {searchTerm ? 'Essayez avec un autre terme de recherche' : 'Aucun mot disponible'}
+          </p>
+        </div>
+      )}
+
+      {/* Message de fin de liste */}
+      {words.length > 0 && !hasMore && !isLoading && (
+        <div className="text-center py-8">
+          <p className="text-sm text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary">
+            Tous les mots ont été chargés
           </p>
         </div>
       )}
