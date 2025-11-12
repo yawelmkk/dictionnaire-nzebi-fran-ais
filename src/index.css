@@ -27,6 +27,18 @@
     }
   }
 
+  /* Empêcher le blocage du scroll lors de l'ouverture de modales */
+  /* Radix UI bloque le scroll par défaut, on s'assure que le scroll reste actif */
+  body[data-scroll-locked="true"] {
+    overflow: visible !important;
+    position: static !important;
+  }
+  
+  /* S'assurer que la modale n'affecte pas le scroll du contenu principal */
+  [data-radix-portal] {
+    position: fixed !important;
+  }
+
   /* Optimisations de performance pour mobile */
   @media (max-width: 768px) {
     * {
