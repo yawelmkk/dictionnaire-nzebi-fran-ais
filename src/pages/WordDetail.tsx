@@ -81,7 +81,11 @@ export default function WordDetail() {
     <div className="space-y-6 animate-fade-in">
       {/* Bouton retour */}
       <button
-        onClick={() => navigate('/')}
+        onClick={() => {
+          // Utiliser navigate('/') pour revenir à la page principale
+          // La position de scroll sera restaurée automatiquement par Index.tsx
+          navigate('/');
+        }}
         className="flex items-center gap-2 text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary hover:text-nzebi-primary dark:hover:text-nzebi-accent transition-colors duration-200 group"
       >
         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-200" />

@@ -10,9 +10,10 @@ interface WordCardProps {
   onToggleFavorite: (wordId: string) => void;
   index: number;
   isMobile: boolean;
+  onNavigate?: (wordId: string) => void;
 }
 
-const WordCard = memo(({ word, isFavorite, onToggleFavorite, index, isMobile }: WordCardProps) => {
+const WordCard = memo(({ word, isFavorite, onToggleFavorite, index, isMobile, onNavigate }: WordCardProps) => {
   const navigate = useNavigate();
 
   // Sur mobile, pas d'animation delay pour améliorer les performances
@@ -20,11 +21,20 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, index, isMobile }: 
     ? {} 
     : { animationDelay: `${Math.min(index * 20, 300)}ms` };
 
+  const handleClick = () => {
+    // Appeler le callback de sauvegarde avant de naviguer
+    if (onNavigate) {
+      onNavigate(word.id);
+    }
+    navigate(`/mot/${word.id}`);
+  };
+
   return (
     <div
+      data-word-id={word.id}
       className={`card-modern p-4 md:p-5 cursor-pointer group ${isMobile ? '' : 'animate-fade-in'}`}
       style={animationStyle}
-      onClick={() => navigate(`/mot/${word.id}`)}
+      onClick={handleClick}
     >
       <div className="flex items-start justify-between gap-3 md:gap-4">
         <div className="flex-1 min-w-0">
