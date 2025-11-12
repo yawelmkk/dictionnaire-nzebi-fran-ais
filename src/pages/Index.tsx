@@ -26,6 +26,7 @@ export default function Index({ searchTerm }: IndexProps) {
   const scrollRestoredRef = useRef(false);
   const wordsRef = useRef<Word[]>([]);
   const currentOffsetRef = useRef(0);
+  const loadMoreWordsRef = useRef<() => Promise<void>>();
 
   // Mettre à jour les refs
   useEffect(() => {
@@ -147,6 +148,11 @@ export default function Index({ searchTerm }: IndexProps) {
     }
   }, [currentOffset, searchTerm, isMobile]);
 
+  // Mettre à jour la ref de loadMoreWords
+  useEffect(() => {
+    loadMoreWordsRef.current = loadMoreWords;
+  }, [loadMoreWords]);
+
   // Charger les favoris
   useEffect(() => {
     loadFavorites();
@@ -194,7 +200,9 @@ export default function Index({ searchTerm }: IndexProps) {
                 const wordIndex = words.findIndex(w => w.id === lastWordId);
                 if (wordIndex === -1 && hasMoreRef.current && !isLoadingRef.current) {
                   // Le mot n'est pas encore chargé, charger plus de mots
-                  loadMoreWords();
+                  if (loadMoreWordsRef.current) {
+                    loadMoreWordsRef.current();
+                  }
                   // Réessayer après le chargement
                   if (attempt < 5) {
                     setTimeout(() => restoreScroll(attempt + 1), 500);
@@ -340,7 +348,7 @@ export default function Index({ searchTerm }: IndexProps) {
         }
       }, 800);
     }
-  }, [words.length, isInitialLoad, loadMoreWords]);
+  }, [words.length, isInitialLoad]);
 
   // Réinitialiser quand la recherche change
   useEffect(() => {
