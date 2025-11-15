@@ -194,7 +194,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
       const restoreScroll = () => {
         // Vérifier si le body a été modifié par Radix UI
         const body = document.body;
-        const html = document.documentElement;
         
         // Restaurer les styles si Radix UI les a modifiés
         if (body.style.overflow === 'hidden' || body.style.position === 'fixed') {
