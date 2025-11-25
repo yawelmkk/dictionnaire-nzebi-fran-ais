@@ -81,7 +81,15 @@ export default function WordDetail() {
     <div className="space-y-6 animate-fade-in">
       {/* Bouton retour */}
       <button
+<<<<<<< HEAD
         onClick={() => navigate('/')}
+=======
+        onClick={() => {
+          // Utiliser navigate('/') pour revenir à la page principale
+          // La position de scroll sera restaurée automatiquement par Index.tsx
+          navigate('/');
+        }}
+>>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
         className="flex items-center gap-2 text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary hover:text-nzebi-primary dark:hover:text-nzebi-accent transition-colors duration-200 group"
       >
         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-200" />
@@ -188,6 +196,19 @@ export default function WordDetail() {
                 </span>
               </div>
             )}
+<<<<<<< HEAD
+=======
+            {isValueSet(word.is_verb) && !isValueSet(word.imperative) && (
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/30">
+                <span className="text-sm font-semibold text-nzebi-primary dark:text-nzebi-accent min-w-[110px]">
+                  Type :
+                </span>
+                <span className="text-base text-nzebi-text dark:text-nzebi-text-dark font-medium">
+                  Verbe
+                </span>
+              </div>
+            )}
+>>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
 
             {isValueSet(word.synonyms) && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/30">

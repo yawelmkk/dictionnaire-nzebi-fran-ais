@@ -1,11 +1,6 @@
-import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom'; // <-- Garder HashRouter
 import { Toaster } from '@/components/ui/sonner';
-import Layout from '@/components/Layout';
-import Index from '@/pages/Index';
-import Search from '@/pages/Search';
-import WordDetail from '@/pages/WordDetail';
-import NotFound from '@/pages/NotFound';
-import { useState } from 'react';
+// ... (le reste des imports et variables)
 
 function App() {
   // Basename basé sur la configuration Vite
@@ -18,7 +13,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   
   return (
-    <Router basename={isGithubPages ? '/' : basename}>
+    <Router basename={isGithubPages ? '/' : basename}> // <-- Garder cette ligne de début de retour
       <Layout searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
         <Routes>
           <Route path="/" element={<Index searchTerm={searchTerm} />} />
@@ -28,10 +23,8 @@ function App() {
         </Routes>
       </Layout>
       <Toaster />
-    </Router>
+    </Router> // <-- Garder cette ligne de fin de retour (et supprimer toutes les lignes du bloc du milieu/distant)
   );
 }
 
 export default App;
-
-
