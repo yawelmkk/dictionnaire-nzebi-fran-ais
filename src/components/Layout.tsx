@@ -44,9 +44,7 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
   const [formKey, setFormKey] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Gestion du mode sombre
   useEffect(() => {
-    // Vérifier la préférence système ou localStorage
     const storedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
@@ -69,7 +67,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
     }
   };
   
-  // Reset click counter after 3 seconds of inactivity
   useEffect(() => {
     if (settingsClickCount > 0) {
       const timer = setTimeout(() => {
@@ -84,15 +81,11 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
     const currentTime = Date.now();
     setLastClickTime(currentTime);
     
-    // Increment counter
     const newCount = settingsClickCount + 1;
     setSettingsClickCount(newCount);
     
-    // After 20 clicks, redirect to appropriate page based on count
     if (newCount >= 20) {
-      // Reset counter
       setSettingsClickCount(0);
-      // Show options after 20 clicks
       navigate('/ajouter');
     }
   };
@@ -162,7 +155,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
     toast.info("Mise à jour", {
       description: "Vérification des mises à jour..."
     });
-    // Ici vous pouvez ajouter la logique de mise à jour
   };
 
   const handleVersionClick = () => {
@@ -174,29 +166,20 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
     }
   };
 
-  // Charger les mots à l'ouverture du menu secret
   useEffect(() => {
     if (showSecretModal) {
       fetchWords();
       setSelectedWord(null);
-      setFormKey(prev => prev + 1); // reset form
+      setFormKey(prev => prev + 1);
     }
   }, [showSecretModal]);
 
-<<<<<<< HEAD
-=======
-  // Préserver la position de scroll lors de l'ouverture/fermeture de la modale
   useEffect(() => {
     if (showSecretModal) {
-      // Sauvegarder la position de scroll actuelle avant l'ouverture
       const scrollY = window.scrollY || document.documentElement.scrollTop;
       
-      // Empêcher Radix UI de bloquer le scroll en restaurant la position
-      // Utiliser plusieurs tentatives pour s'assurer que ça fonctionne
       const restoreScroll = () => {
-        // Vérifier si le body a été modifié par Radix UI
         const body = document.body;
-        // Restaurer les styles si Radix UI les a modifiés
         if (body.style.overflow === 'hidden' || body.style.position === 'fixed') {
           body.style.overflow = '';
           body.style.position = '';
@@ -204,7 +187,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
           body.style.width = '';
         }
         
-        // Restaurer la position de scroll
         const currentScroll = window.scrollY || document.documentElement.scrollTop;
         if (Math.abs(currentScroll - scrollY) > 1) {
           window.scrollTo({
@@ -214,18 +196,15 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
         }
       };
 
-      // Restaurer après que Radix UI ait fait ses modifications
       const timeoutId1 = setTimeout(restoreScroll, 0);
       const timeoutId2 = setTimeout(restoreScroll, 10);
       const timeoutId3 = setTimeout(restoreScroll, 50);
       const timeoutId4 = setTimeout(restoreScroll, 100);
       
-      // Utiliser requestAnimationFrame pour restaurer après le rendu
       requestAnimationFrame(() => {
         requestAnimationFrame(restoreScroll);
       });
 
-      // Observer les changements de style sur le body
       const observer = new MutationObserver(restoreScroll);
       observer.observe(document.body, {
         attributes: true,
@@ -239,7 +218,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
         clearTimeout(timeoutId4);
         observer.disconnect();
         
-        // Restaurer les styles et la position à la fermeture
         const body = document.body;
         body.style.overflow = '';
         body.style.position = '';
@@ -256,7 +234,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
     }
   }, [showSecretModal]);
 
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
   const fetchWords = async () => {
     try {
       const data = await getAllWords();
@@ -280,14 +257,13 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
 
   const handleEditWord = (word: any) => {
     setSelectedWord(word);
-    setFormKey(prev => prev + 1); // force le reset du formulaire avec nouvelles valeurs
+    setFormKey(prev => prev + 1);
   };
 
   const handleAddWord = async (data: any) => {
     setIsSubmitting(true);
     try {
       if (selectedWord) {
-        // Modification : suppression puis ajout (simple pour ce cas)
         await deleteWord(selectedWord.id);
       }
       await addWord(data);
@@ -314,7 +290,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
       <div className="sticky top-0 z-50 backdrop-blur-lg bg-white/90 dark:bg-nzebi-background-dark/90 border-b border-nzebi-surface dark:border-nzebi-surface-dark">
         <header className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between py-4">
-            {/* Logo et titre */}
             <button 
               onClick={() => navigate('/')}
               className="flex items-center space-x-3 group"
@@ -332,9 +307,7 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
               </div>
             </button>
 
-            {/* Actions */}
             <div className="flex items-center space-x-2">
-              {/* Bascule mode sombre */}
               <button
                 onClick={toggleDarkMode}
                 className="p-2.5 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
@@ -347,7 +320,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
 
-              {/* Menu principal */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -398,7 +370,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
             </div>
           </div>
         </header>
-        {/* Search bar moved here */}
         <div className="max-w-4xl mx-auto px-4 pb-4 sm:px-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary pointer-events-none" size={20} />
@@ -424,29 +395,19 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
         </div>
       </div>
 
-      <main className="max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 pt-[120px]">
+      <main className="max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
         {children}
       </main>
-      
-      {/* <MobileNav /> */}
 
       <Dialog open={showSecretModal} onOpenChange={setShowSecretModal}>
-<<<<<<< HEAD
         <DialogContent className="max-w-2xl">
-=======
-        <DialogContent 
-          className="max-w-2xl"
-        >
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
           <DialogHeader>
             <DialogTitle>Menu secret : Gestion des mots</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Compteur de mots */}
             <div className="mb-2 text-sm font-semibold text-gray-700">
               Nombre de mots enregistrés : {filteredWords.length}
             </div>
-            {/* Liste des mots + recherche */}
             <div className="w-full md:w-1/2 max-h-[60vh] overflow-y-auto border-r pr-4">
               <div className="flex items-center mb-2 gap-2 sticky top-0 bg-white z-10 py-2 border-b">
                 <input
@@ -484,7 +445,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
                 ))}
               </ul>
             </div>
-            {/* Formulaire d'ajout/modification */}
             <div className="w-full md:w-1/2">
               <WordForm
                 key={formKey}

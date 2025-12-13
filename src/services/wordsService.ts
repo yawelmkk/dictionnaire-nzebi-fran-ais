@@ -1,14 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
 import { WordFormValues } from "@/components/word-form/WordFormSchema";
-// import { categories, getCategoryName } from "@/lib/dictionaryData"; // Commenté car non utilisé
-// import { createClient } from "@supabase/supabase-js"; // Not used if Edge Function is commented out
 
-// Définition de l'interface Word avec tous les champs spécifiés
 export interface Word {
   id: string;
   nzebi_word: string;
   french_word: string;
-  part_of_speech: string; // Correspond à categoryId dans le formulaire
+  part_of_speech: string;
   example_nzebi: string | null;
   example_french: string | null;
   url_prononciation: string | null;
@@ -20,40 +17,8 @@ export interface Word {
 }
 
 const LOCAL_STORAGE_KEY = 'nzebi_dictionary_words';
-<<<<<<< HEAD
-// Removed `let usingJsonDictionary = false;` as it's unused.
-=======
-// Cache pour stocker tous les mots chargés (évite de recharger à chaque pagination)
 let cachedAllWords: Word[] | null = null;
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
 
-// Commented out Supabase Edge Function related code
-// const SUPABASE_FUNCTIONS_URL = "https://thymkjtnggytmiemzenp.supabase.co/functions/v1"; // REMPLACEZ PAR VOTRE URL RÉELLE DE SUPABASE FUNCTIONS
-// const loadWordsFromEdgeFunction = async (lettre?: string): Promise<Word[]> => {
-//   let url = `${SUPABASE_FUNCTIONS_URL}/get-dictionnaire`;
-//   if (lettre) {
-//     url += `?lettre=${lettre}`;
-//   }
-//   try {
-//     const response = await fetch(url, {
-//       headers: {
-//         'Content-Type': 'application/json',
-//         // 'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-//       },
-//     });
-//     if (!response.ok) {
-//       console.error(`Erreur de la fonction Edge: ${response.status} ${response.statusText}`);
-//       return [];
-//     }
-//     const data = await response.json();
-//     return data as Word[];
-//   } catch (error) {
-//     console.error("Erreur lors de l'appel de la fonction Edge get-dictionnaire:", error);
-//     return [];
-//   }
-// };
-
-// Fonction pour charger les mots depuis localStorage
 const loadWordsFromLocal = (): Word[] => {
   try {
     const serializedWords = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -67,7 +32,6 @@ const loadWordsFromLocal = (): Word[] => {
   }
 };
 
-// Fonction pour sauvegarder les mots dans localStorage
 const saveWordsToLocal = (words: Word[]) => {
   try {
     const serializedWords = JSON.stringify(words);
@@ -77,10 +41,8 @@ const saveWordsToLocal = (words: Word[]) => {
   }
 };
 
-// Nouvelle fonction pour charger les mots depuis le fichier JSON statique
 const loadWordsFromJson = async (): Promise<Word[]> => {
   try {
-    // Use import.meta.env.BASE_URL to get the correct base path for GitHub Pages
     const jsonPath = `${(import.meta as any).env?.BASE_URL || ''}dictionnaire.json`;
     console.log(`Tentative de chargement du dictionnaire depuis: ${jsonPath}`);
     const response = await fetch(jsonPath);
@@ -109,34 +71,21 @@ const loadWordsFromJson = async (): Promise<Word[]> => {
   }
 };
 
-<<<<<<< HEAD
-export const getAllWords = async (): Promise<Word[]> => {
-=======
-// Fonction interne pour charger tous les mots (utilisée pour le cache)
 const loadAllWordsInternal = async (): Promise<Word[]> => {
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
-  // 1. Tenter de charger les mots depuis le fichier JSON statique local
   const wordsFromJson = await loadWordsFromJson();
   if (wordsFromJson.length > 0) {
     console.log("Utilisation du fichier JSON local comme source principale.");
-<<<<<<< HEAD
-    // Optionnel: Sauvegarder dans localStorage pour une première charge rapide en cas de besoin
-    // saveWordsToLocal(wordsFromJson); // Uniquement si vous voulez les mettre en cache pour les sessions futures
-=======
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
     return wordsFromJson;
   } else {
     console.log("Le fichier JSON local n'a pas renvoyé de mots ou a échoué. Bascule vers d'autres sources.");
 
-    // 2. Fallback au localStorage pour les mots ajoutés/modifiés localement
     let words = loadWordsFromLocal();
     if (words.length > 0) {
       console.log("Utilisation des mots du localStorage.");
       return words;
     }
 
-    // 3. Fallback à Supabase Database (nécessite une connexion internet)
-    console.log("LocalStorage vide, tentative de chargement depuis Supabase Database (nécessite une connexion).");
+    console.log("LocalStorage vide, tentative de chargement depuis Supabase Database.");
     try {
       const { data, error } = await supabase
         .from('words')
@@ -156,42 +105,36 @@ const loadAllWordsInternal = async (): Promise<Word[]> => {
           example_nzebi: dbWord.example_nzebi,
           example_french: dbWord.example_french,
           url_prononciation: dbWord.pronunciation_url || null,
-          is_verb: null, // À mapper si ces champs existent dans votre DB Supabase
+          is_verb: null,
           plural_form: null,
           synonyms: null,
           scientific_name: null,
           imperative: null,
         }));
-        saveWordsToLocal(supabaseWords); // Sauvegarder les mots de Supabase en local pour les sessions futures
+        saveWordsToLocal(supabaseWords);
         return supabaseWords;
       }
     } catch (supabaseError) {
-      console.warn('Supabase: Impossible de se connecter ou de charger les mots (hors ligne).', supabaseError);
+      console.warn('Supabase: Impossible de se connecter ou de charger les mots.', supabaseError);
       return [];
     }
   }
-  return []; // Retourne un tableau vide si aucune source ne fonctionne
+  return [];
 };
 
-<<<<<<< HEAD
-=======
 export const getAllWords = async (): Promise<Word[]> => {
-  // Si le cache existe, le retourner
   if (cachedAllWords !== null) {
     return cachedAllWords;
   }
   
-  // Sinon, charger et mettre en cache
   cachedAllWords = await loadAllWordsInternal();
   return cachedAllWords;
 };
 
-// Fonction pour réinitialiser le cache (utile après ajout/modification/suppression)
 export const clearWordsCache = () => {
   cachedAllWords = null;
 };
 
-// Nouvelle fonction pour obtenir les mots paginés
 export interface PaginatedWordsResult {
   words: Word[];
   hasMore: boolean;
@@ -203,10 +146,8 @@ export const getWordsPaginated = async (
   limit: number = 50,
   searchTerm: string = ''
 ): Promise<PaginatedWordsResult> => {
-  // Charger tous les mots (utilise le cache si disponible)
   const allWords = await getAllWords();
   
-  // Filtrer si un terme de recherche est fourni
   let filteredWords = allWords;
   if (searchTerm.trim()) {
     const searchLower = searchTerm.toLowerCase();
@@ -217,7 +158,6 @@ export const getWordsPaginated = async (
     );
   }
   
-  // Paginer
   const paginatedWords = filteredWords.slice(offset, offset + limit);
   const hasMore = offset + limit < filteredWords.length;
   
@@ -228,7 +168,6 @@ export const getWordsPaginated = async (
   };
 };
 
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
 export const addWord = async (wordData: WordFormValues) => {
   const newWord: Word = {
     id: Date.now().toString(),
@@ -245,18 +184,13 @@ export const addWord = async (wordData: WordFormValues) => {
     imperative: wordData.imperative || null,
   };
 
-  // Ajouter au localStorage pour persistance locale
   const currentWords = loadWordsFromLocal();
   const updatedWords = [...currentWords, newWord];
   saveWordsToLocal(updatedWords);
   console.log("Mot ajouté localement.");
   
-<<<<<<< HEAD
-=======
-  // Réinitialiser le cache pour inclure le nouveau mot
   clearWordsCache();
   
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
   return newWord;
 };
 
@@ -280,7 +214,6 @@ export const editWord = async (wordData: WordFormValues) => {
     imperative: wordData.imperative || null,
   };
 
-  // Modifier dans localStorage
   const currentWords = loadWordsFromLocal();
   const updatedWordsList = currentWords.map(word => 
     word.id === updatedWord.id ? updatedWord : word
@@ -288,12 +221,8 @@ export const editWord = async (wordData: WordFormValues) => {
   saveWordsToLocal(updatedWordsList);
   console.log("Mot modifié localement.");
   
-<<<<<<< HEAD
-=======
-  // Réinitialiser le cache pour inclure les modifications
   clearWordsCache();
   
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
   return updatedWord;
 };
 
@@ -303,23 +232,12 @@ export const getWordsByCategory = async (categoryId: string) => {
 };
 
 export const deleteWord = async (id: string) => {
-  // Supprimer du localStorage
   let currentWords = loadWordsFromLocal();
   const updatedWords = currentWords.filter(word => word.id !== id);
   saveWordsToLocal(updatedWords);
   console.log("Mot supprimé localement.");
   
-<<<<<<< HEAD
-=======
-  // Réinitialiser le cache pour refléter la suppression
   clearWordsCache();
   
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
   return true;
 };
-
-
-// Assurez-vous d'exporter la fonction si elle doit être utilisée ailleurs, par exemple pour le filtrage par lettre
-// export const getWordsByLetter = async (lettre: string): Promise<Word[]> => {
-//   return loadWordsFromEdgeFunction(lettre);
-// };
