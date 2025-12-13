@@ -1,19 +1,22 @@
-import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom'; // <-- Garder HashRouter
+import { useState } from 'react';
+import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
-// ... (le reste des imports et variables)
+import Layout from '@/components/Layout';
+import Index from '@/pages/Index';
+import Search from '@/pages/Search';
+import WordDetail from '@/pages/WordDetail';
+import NotFound from '@/pages/NotFound';
 
 function App() {
-  // Basename basé sur la configuration Vite
   const baseUrl = (import.meta as any).env?.BASE_URL || '/';
   const basename = String(baseUrl).replace(/\/$/, '');
 
-  // Sur GitHub Pages, privilégier HashRouter pour éviter les 404 et pages blanches
   const isGithubPages = typeof window !== 'undefined' && /\.github\.io$/i.test(window.location.hostname);
   const Router: React.ComponentType<any> = isGithubPages ? (HashRouter as any) : (BrowserRouter as any);
   const [searchTerm, setSearchTerm] = useState('');
   
   return (
-    <Router basename={isGithubPages ? '/' : basename}> // <-- Garder cette ligne de début de retour
+    <Router basename={isGithubPages ? '/' : basename}>
       <Layout searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
         <Routes>
           <Route path="/" element={<Index searchTerm={searchTerm} />} />
@@ -23,7 +26,7 @@ function App() {
         </Routes>
       </Layout>
       <Toaster />
-    </Router> // <-- Garder cette ligne de fin de retour (et supprimer toutes les lignes du bloc du milieu/distant)
+    </Router>
   );
 }
 

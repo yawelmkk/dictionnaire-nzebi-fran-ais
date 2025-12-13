@@ -4,7 +4,6 @@ import { getAllWords, Word } from '@/services/wordsService';
 import { getCategoryName } from '@/lib/dictionaryData';
 import { ArrowLeft, BookOpen, Volume2, Star, Link as LinkIcon } from 'lucide-react';
 
-// Fonction utilitaire pour vérifier si une valeur est "vide"
 const isValueSet = (value: string | boolean | null | undefined): boolean => {
   if (value === null || value === undefined) {
     return false;
@@ -79,24 +78,14 @@ export default function WordDetail() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Bouton retour */}
       <button
-<<<<<<< HEAD
         onClick={() => navigate('/')}
-=======
-        onClick={() => {
-          // Utiliser navigate('/') pour revenir à la page principale
-          // La position de scroll sera restaurée automatiquement par Index.tsx
-          navigate('/');
-        }}
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
         className="flex items-center gap-2 text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary hover:text-nzebi-primary dark:hover:text-nzebi-accent transition-colors duration-200 group"
       >
         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-200" />
         <span className="font-medium">Retour</span>
       </button>
 
-      {/* Carte principale */}
       <div className="card-modern p-6 md:p-8">
         <div className="flex items-start justify-between gap-4 mb-6">
           <div className="flex-1">
@@ -117,7 +106,6 @@ export default function WordDetail() {
             )}
           </div>
 
-          {/* Actions */}
           <div className="flex items-center gap-2">
             {isValueSet(word.url_prononciation) && (
               <button
@@ -150,7 +138,6 @@ export default function WordDetail() {
           </div>
         </div>
 
-        {/* Exemple */}
         {isValueSet(word.example_nzebi) && (
           <div className="mt-6 pt-6 border-t border-nzebi-surface dark:border-nzebi-surface-dark">
             <div className="flex items-center gap-2 mb-4">
@@ -172,7 +159,6 @@ export default function WordDetail() {
           </div>
         )}
 
-        {/* Informations additionnelles */}
         {(isValueSet(word.plural_form) || isValueSet(word.synonyms) || isValueSet(word.scientific_name) || (isValueSet(word.is_verb) && isValueSet(word.imperative))) && (
           <div className="mt-6 pt-6 border-t border-nzebi-surface dark:border-nzebi-surface-dark space-y-4">
             {isValueSet(word.plural_form) && (
@@ -196,8 +182,6 @@ export default function WordDetail() {
                 </span>
               </div>
             )}
-<<<<<<< HEAD
-=======
             {isValueSet(word.is_verb) && !isValueSet(word.imperative) && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/30">
                 <span className="text-sm font-semibold text-nzebi-primary dark:text-nzebi-accent min-w-[110px]">
@@ -208,7 +192,6 @@ export default function WordDetail() {
                 </span>
               </div>
             )}
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
 
             {isValueSet(word.synonyms) && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/30">
@@ -251,5 +234,3 @@ export default function WordDetail() {
     </div>
   );
 }
-
-
