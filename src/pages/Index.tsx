@@ -16,6 +16,7 @@ export default function Index({ searchTerm }: IndexProps) {
   const isMobile = useIsMobile();
   const [words, setWords] = useState<Word[]>([]);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [expandedWordId, setExpandedWordId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [currentOffset, setCurrentOffset] = useState(0);
@@ -321,19 +322,16 @@ export default function Index({ searchTerm }: IndexProps) {
   return (
     <div className={`space-y-4 md:space-y-6 pt-4 md:pt-6 ${isMobile ? '' : 'animate-fade-in'}`}>
       <div className="space-y-2 md:space-y-3">
-        {words.map((word, index) => (
+        {words.map((word) => (
           <WordCard
             key={word.id}
             word={word}
             isFavorite={favorites.has(word.id)}
             onToggleFavorite={toggleFavorite}
-            index={index}
             isMobile={isMobile}
-            onNavigate={(wordId) => {
-              localStorage.setItem(LAST_WORD_ID_KEY, wordId);
-              const scrollY = window.scrollY || window.pageYOffset;
-              localStorage.setItem(SCROLL_STORAGE_KEY, scrollY.toString());
-              saveState();
+            isExpanded={expandedWordId === word.id}
+            onToggleExpand={(wordId: string) => {
+              setExpandedWordId(prev => (prev === wordId ? null : wordId));
             }}
           />
         ))}
