@@ -1,5 +1,5 @@
-import rawDictionary from "../../dictionnaire.json";
 import { WordFormValues } from "@/components/word-form/WordFormSchema";
+
 export interface Word {
   id: string;
   nzebi_word: string;
@@ -42,8 +42,13 @@ const saveWordsToLocal = (words: Word[]) => {
 
 const loadWordsFromJson = async (): Promise<Word[]> => {
   try {
-    const data: any[] = (rawDictionary as any[]) || [];
-    console.log(`Dictionnaire importé depuis le bundle: ${data.length} mots`);
+    const response = await fetch('/dictionnaire.json');
+    if (!response.ok) {
+      console.error(`Erreur lors du chargement: ${response.status}`);
+      return [];
+    }
+    const data = await response.json();
+    console.log(`Dictionnaire chargé: ${data.length} mots`);
 
     return data.map((item: any) => ({
       id: item.id,
@@ -60,7 +65,7 @@ const loadWordsFromJson = async (): Promise<Word[]> => {
       imperative: item.imperative || null,
     })) as Word[];
   } catch (error) {
-    console.error("Erreur lors du chargement de dictionnaire.json depuis le bundle:", error);
+    console.error("Erreur lors du chargement de dictionnaire.json:", error);
     return [];
   }
 };
