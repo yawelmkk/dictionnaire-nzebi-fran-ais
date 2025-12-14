@@ -101,8 +101,8 @@ export interface PaginatedWordsResult {
 }
 
 export const getWordsPaginated = async (
-  offset: number = 0,
-  limit: number = 50,
+  _offset: number = 0,
+  _limit: number = 50,
   searchTerm: string = ''
 ): Promise<PaginatedWordsResult> => {
   const allWords = await getAllWords();
@@ -117,13 +117,12 @@ export const getWordsPaginated = async (
     );
   }
   
-  const paginatedWords = filteredWords.slice(offset, offset + limit);
-  const hasMore = offset + limit < filteredWords.length;
-  
+  // On renvoie tous les mots filtrés, sans pagination, pour s'assurer
+  // que l'utilisateur voit l'intégralité du dictionnaire.
   return {
-    words: paginatedWords,
-    hasMore,
-    total: filteredWords.length
+    words: filteredWords,
+    hasMore: false,
+    total: filteredWords.length,
   };
 };
 
