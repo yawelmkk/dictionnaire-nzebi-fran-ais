@@ -23,20 +23,16 @@
   /* Amélioration de la lisibilité sur mobile */
   @media (max-width: 640px) {
     body {
-      font-size: 16px; /* Évite le zoom automatique sur iOS */
+      font-size: 16px;
     }
   }
-<<<<<<< HEAD
-=======
 
   /* Empêcher le blocage du scroll lors de l'ouverture de modales */
-  /* Radix UI bloque le scroll par défaut, on s'assure que le scroll reste actif */
   body[data-scroll-locked="true"] {
     overflow: visible !important;
     position: static !important;
   }
   
-  /* S'assurer que la modale n'affecte pas le scroll du contenu principal */
   [data-radix-portal] {
     position: fixed !important;
   }
@@ -44,37 +40,26 @@
   /* Optimisations de performance pour mobile */
   @media (max-width: 768px) {
     * {
-      /* Réduire les animations sur mobile */
       animation-duration: 0.15s !important;
       transition-duration: 0.15s !important;
     }
 
-    /* Désactiver les animations complexes sur mobile */
     .animate-fade-in {
       animation: none !important;
       opacity: 1 !important;
     }
   }
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
 }
 
 @layer components {
   /* Style pour les cartes modernes avec micro-interaction */
   .card-modern {
-<<<<<<< HEAD
-    @apply bg-white rounded-2xl shadow-soft transition-all duration-300 
-           hover:shadow-card-hover hover:-translate-y-1 border border-transparent
-           dark:bg-nzebi-surface-dark dark:shadow-none dark:hover:shadow-card-hover
-           dark:border-nzebi-surface-dark/50;
-=======
     @apply bg-white rounded-2xl shadow-soft border border-transparent
            dark:bg-nzebi-surface-dark dark:shadow-none
            dark:border-nzebi-surface-dark/50;
-    /* Optimisations pour mobile */
     will-change: transform;
     content-visibility: auto;
     contain-intrinsic-size: auto 200px;
-    /* Transitions optimisées - désactivées sur mobile pour meilleures performances */
     transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
   }
 
@@ -91,7 +76,6 @@
       transition: none;
       will-change: auto;
     }
->>>>>>> f199d3694392ca6e93a107dd066c483fb2b46c12
   }
 
   /* Input de recherche moderne */
@@ -145,5 +129,3 @@
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-
-
