@@ -1,42 +1,32 @@
 import { memo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getCategoryName } from '@/lib/dictionaryData';
-import { ChevronRight, Star } from 'lucide-react';
+import { ChevronDown, Star } from 'lucide-react';
 import { Word } from '@/services/wordsService';
 
 interface WordCardProps {
   word: Word;
   isFavorite: boolean;
   onToggleFavorite: (wordId: string) => void;
-  index: number;
   isMobile: boolean;
-  onNavigate?: (wordId: string) => void;
+  isExpanded: boolean;
+  onToggleExpand: (wordId: string) => void;
 }
 
-const WordCard = memo(({ word, isFavorite, onToggleFavorite, index, isMobile, onNavigate }: WordCardProps) => {
-  const navigate = useNavigate();
-
-  // Sur mobile, pas d'animation delay pour améliorer les performances
-  const animationStyle = isMobile 
-    ? {} 
-    : { animationDelay: `${Math.min(index * 20, 300)}ms` };
-
+const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile, isExpanded, onToggleExpand }: WordCardProps) => {
   const handleClick = () => {
-    // Appeler le callback de sauvegarde avant de naviguer
-    if (onNavigate) {
-      onNavigate(word.id);
-    }
-    navigate(`/mot/${word.id}`);
+    onToggleExpand(word.id);
   };
 
   return (
     <div
       data-word-id={word.id}
-      className={`card-modern p-4 md:p-5 cursor-pointer group ${isMobile ? '' : 'animate-fade-in'}`}
-      style={animationStyle}
-      onClick={handleClick}
+      className={`card-modern p-4 md:p-5 group ${isMobile ? '' : 'animate-fade-in'} hover-scale`}
     >
-      <div className="flex items-start justify-between gap-3 md:gap-4">
+      <button
+        type="button"
+        onClick={handleClick}
+        className="w-full flex items-start justify-between gap-3 md:gap-4 text-left"
+      >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 md:gap-3 mb-2 flex-wrap">
             <h3 className="text-xl md:text-2xl font-bold text-nzebi-primary dark:text-nzebi-accent truncate group-hover:text-nzebi-primary-light dark:group-hover:text-nzebi-accent-light transition-colors duration-150">
@@ -46,17 +36,21 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, index, isMobile, on
               {getCategoryName(word.part_of_speech)}
             </span>
           </div>
-          <p className="text-sm md:text-base text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary mb-2 md:mb-3">
-            {word.french_word}
-          </p>
-          {word.example_nzebi && (
-            <div className="mt-2 md:mt-3 pt-2 md:pt-3 border-t border-nzebi-surface dark:border-nzebi-surface-dark">
-              <p className="text-xs md:text-sm italic text-nzebi-text dark:text-nzebi-text-dark">
-                "{word.example_nzebi}"
+          {isExpanded && (
+            <div className="mt-1 space-y-2 animate-accordion-down">
+              <p className="text-sm md:text-base text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary">
+                {word.french_word}
               </p>
-              <p className="text-xs md:text-sm text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary">
-                {word.example_french}
-              </p>
+              {word.example_nzebi && (
+                <div className="mt-2 pt-2 border-t border-nzebi-surface dark:border-nzebi-surface-dark">
+                  <p className="text-xs md:text-sm italic text-nzebi-text dark:text-nzebi-text-dark">
+                    "{word.example_nzebi}"
+                  </p>
+                  <p className="text-xs md:text-sm text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary">
+                    {word.example_french}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -78,12 +72,14 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, index, isMobile, on
               }`}
             />
           </button>
-          <ChevronRight
+          <ChevronDown
             size={20}
-            className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary group-hover:text-nzebi-primary dark:group-hover:text-nzebi-accent transition-colors duration-150 hidden md:block"
+            className={`text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary transition-transform duration-150 ${
+              isExpanded ? 'rotate-180' : ''
+            }`}
           />
         </div>
-      </div>
+      </button>
     </div>
   );
 });
