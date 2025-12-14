@@ -43,28 +43,41 @@ const saveWordsToLocal = (words: Word[]) => {
 
 const loadWordsFromJson = async (): Promise<Word[]> => {
   try {
-    const jsonPath = `${(import.meta as any).env?.BASE_URL || ''}dictionnaire.json`;
-    console.log(`Tentative de chargement du dictionnaire depuis: ${jsonPath}`);
-    const response = await fetch(jsonPath);
-    if (!response.ok) {
-      console.error(`Erreur lors du chargement de dictionnaire.json: ${response.status} ${response.statusText}`);
-      return [];
+    // Try multiple paths to find the dictionary file
+    const paths = [
+      '/dictionnaire.json',
+      './dictionnaire.json',
+      `${window.location.origin}/dictionnaire.json`
+    ];
+    
+    for (const jsonPath of paths) {
+      console.log(`Tentative de chargement du dictionnaire depuis: ${jsonPath}`);
+      try {
+        const response = await fetch(jsonPath);
+        if (response.ok) {
+          const data = await response.json();
+          console.log(`Dictionnaire chargé avec succès depuis: ${jsonPath}, ${data.length} mots`);
+          return data.map((item: any) => ({
+            id: item.id,
+            nzebi_word: item.nzebi_word,
+            french_word: item.french_word,
+            part_of_speech: item.part_of_speech,
+            example_nzebi: item.example_nzebi || null,
+            example_french: item.example_french || null,
+            url_prononciation: item.pronunciation_url || null,
+            is_verb: typeof item.is_verb === 'string' ? (item.is_verb.toLowerCase() === 'vrai') : (item.is_verb || null),
+            plural_form: item.plural_form || null,
+            synonyms: item.synonyms || null,
+            scientific_name: item.scientific_name || null,
+            imperative: item.imperative || null,
+          })) as Word[];
+        }
+      } catch (e) {
+        console.log(`Échec pour ${jsonPath}:`, e);
+      }
     }
-    const data = await response.json();
-    return data.map((item: any) => ({
-      id: item.id,
-      nzebi_word: item.nzebi_word,
-      french_word: item.french_word,
-      part_of_speech: item.part_of_speech,
-      example_nzebi: item.example_nzebi || null,
-      example_french: item.example_french || null,
-      url_prononciation: item.pronunciation_url || null,
-      is_verb: typeof item.is_verb === 'string' ? (item.is_verb.toLowerCase() === 'vrai') : (item.is_verb || null),
-      plural_form: item.plural_form || null,
-      synonyms: item.synonyms || null,
-      scientific_name: item.scientific_name || null,
-      imperative: item.imperative || null,
-    })) as Word[];
+    console.error('Impossible de charger le dictionnaire depuis tous les chemins');
+    return [];
   } catch (error) {
     console.error("Erreur lors du chargement de dictionnaire.json:", error);
     return [];
