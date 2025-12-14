@@ -1,4 +1,3 @@
-import { supabase } from "@/integrations/supabase/client";
 import { WordFormValues } from "@/components/word-form/WordFormSchema";
 
 export interface Word {
@@ -87,51 +86,11 @@ const loadWordsFromJson = async (): Promise<Word[]> => {
 const loadAllWordsInternal = async (): Promise<Word[]> => {
   const wordsFromJson = await loadWordsFromJson();
   if (wordsFromJson.length > 0) {
-    console.log("Utilisation du fichier JSON local comme source principale.");
+    console.log(`Dictionnaire chargé: ${wordsFromJson.length} mots depuis dictionnaire.json`);
     return wordsFromJson;
-  } else {
-    console.log("Le fichier JSON local n'a pas renvoyé de mots ou a échoué. Bascule vers d'autres sources.");
-
-    let words = loadWordsFromLocal();
-    if (words.length > 0) {
-      console.log("Utilisation des mots du localStorage.");
-      return words;
-    }
-
-    console.log("LocalStorage vide, tentative de chargement depuis Supabase Database.");
-    try {
-      const { data, error } = await supabase
-        .from('words')
-        .select('*');
-
-      if (error) {
-        console.error('Erreur Supabase lors du chargement:', error);
-        return [];
-      }
-
-      if (data) {
-        const supabaseWords: Word[] = data.map(dbWord => ({
-          id: dbWord.id,
-          nzebi_word: dbWord.nzebi_word,
-          french_word: dbWord.french_word,
-          part_of_speech: dbWord.part_of_speech,
-          example_nzebi: dbWord.example_nzebi,
-          example_french: dbWord.example_french,
-          url_prononciation: dbWord.pronunciation_url || null,
-          is_verb: null,
-          plural_form: null,
-          synonyms: null,
-          scientific_name: null,
-          imperative: null,
-        }));
-        saveWordsToLocal(supabaseWords);
-        return supabaseWords;
-      }
-    } catch (supabaseError) {
-      console.warn('Supabase: Impossible de se connecter ou de charger les mots.', supabaseError);
-      return [];
-    }
   }
+  
+  console.error("Impossible de charger le dictionnaire.json");
   return [];
 };
 
