@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-nzebi-background text-nzebi-text transition-colors duration-300;
+  }
+
+  /* Mode sombre */
+  body.dark {
+    @apply bg-nzebi-background-dark text-nzebi-text-dark;
+  }
+
+  /* Amélioration de la lisibilité sur mobile */
+  @media (max-width: 640px) {
+    body {
+      font-size: 16px;
+    }
+  }
+
+  /* Empêcher le blocage du scroll lors de l'ouverture de modales */
+  body[data-scroll-locked="true"] {
+    overflow: visible !important;
+    position: static !important;
+  }
+  
+  [data-radix-portal] {
+    position: fixed !important;
+  }
+
+  /* Optimisations de performance pour mobile */
+  @media (max-width: 768px) {
+    * {
+      animation-duration: 0.15s !important;
+      transition-duration: 0.15s !important;
+    }
+
+    .animate-fade-in {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+  }
+}
+
+@layer components {
+  /* Style pour les cartes modernes avec micro-interaction */
+  .card-modern {
+    @apply bg-white rounded-2xl shadow-soft border border-transparent
+           dark:bg-nzebi-surface-dark dark:shadow-none
+           dark:border-nzebi-surface-dark/50;
+    will-change: transform;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 200px;
+    transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+  }
+
+  /* Hover uniquement sur desktop */
+  @media (hover: hover) and (pointer: fine) {
+    .card-modern {
+      @apply hover:shadow-card-hover hover:-translate-y-1 dark:hover:shadow-card-hover;
+    }
+  }
+
+  /* Sur mobile, désactiver les transitions lourdes */
+  @media (max-width: 768px) {
+    .card-modern {
+      transition: none;
+      will-change: auto;
+    }
+  }
+
+  /* Input de recherche moderne */
+  .search-input {
+    @apply w-full px-6 py-4 rounded-2xl border-2 border-transparent
+           bg-white shadow-soft text-lg placeholder:text-nzebi-text-secondary/50
+           focus:outline-none focus:ring-2 focus:ring-nzebi-primary focus:border-transparent
+           transition-all duration-300
+           dark:bg-nzebi-surface-dark dark:text-nzebi-text-dark
+           dark:placeholder:text-nzebi-text-dark-secondary/50
+           dark:focus:ring-nzebi-accent;
+  }
+
+  /* Bouton primaire */
+  .btn-primary {
+    @apply px-6 py-3 rounded-xl bg-nzebi-primary text-white font-semibold
+           shadow-soft hover:bg-nzebi-primary-light
+           active:scale-95 transition-all duration-200
+           dark:bg-nzebi-accent dark:hover:bg-nzebi-accent-light;
+  }
+
+  /* Badge de catégorie */
+  .badge-category {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+           bg-nzebi-primary/10 text-nzebi-primary border border-nzebi-primary/20
+           dark:bg-nzebi-accent/20 dark:text-nzebi-accent dark:border-nzebi-accent/30;
+  }
+
+  /* Ligne de séparation active pour souligner */
+  .underline-active {
+    @apply relative;
+  }
+
+  .underline-active::after {
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-nzebi-primary
+           dark:bg-nzebi-accent;
+    content: '';
+    animation: underlineExpand 0.3s ease-out;
+  }
+}
+
+@keyframes underlineExpand {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
