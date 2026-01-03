@@ -25,11 +25,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="icon" href="/favicon.ico">
+    <style>
+      .splash-screen{
+        position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:#fff;transition:opacity .3s ease;}
+      .splash-screen img{max-width:60%;height:auto;display:block}
+      .splash-hidden{opacity:0;pointer-events:none}
+    </style>
 
     <script type="module" src="/src/main.tsx"></script>
   </head>
 
   <body class="font-sans">
+    <div id="splash" class="splash-screen">
+      <img src="/splash-nzebi.png" alt="Splash Nzebi" />
+    </div>
     <div id="root"></div>
 
   </body>

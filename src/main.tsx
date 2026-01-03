@@ -9,4 +9,17 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 )
 
+// remove splash screen once React has mounted
+setTimeout(() => {
+  try {
+    const splash = document.getElementById('splash');
+    if (splash) {
+      splash.classList.add('splash-hidden');
+      setTimeout(() => splash.remove(), 350);
+    }
+  } catch (e) {
+    // ignore
+  }
+}, 0);
+
 
