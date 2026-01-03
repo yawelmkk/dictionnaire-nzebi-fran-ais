@@ -32,6 +32,10 @@
       .splash-hidden{opacity:0;pointer-events:none}
     </style>
 
+    <script>
+      // record when the splash was first rendered so the app can ensure a minimum display time
+      window.__splashStart = Date.now();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </head>
 
