@@ -42,13 +42,19 @@ const saveWordsToLocal = (words: Word[]) => {
 
 const loadWordsFromJson = async (): Promise<Word[]> => {
   try {
-    const response = await fetch('./dictionnaire.json');
+    const startTime = performance.now();
+    const response = await fetch('./dictionnaire.json', {
+      cache: 'force-cache', // Use cached version if available (Service Worker)
+    });
+    
     if (!response.ok) {
       console.error(`Erreur lors du chargement: ${response.status}`);
       return [];
     }
+    
     const data = await response.json();
-    console.log(`Dictionnaire chargé: ${data.length} mots`);
+    const endTime = performance.now();
+    console.log(`Dictionnaire chargé: ${data.length} mots (${(endTime - startTime).toFixed(2)}ms)`);
 
     return data.map((item: any) => ({
       id: item.id,
@@ -66,13 +72,84 @@ const loadWordsFromJson = async (): Promise<Word[]> => {
     })) as Word[];
   } catch (error) {
     console.error("Erreur lors du chargement de dictionnaire.json:", error);
+    
+    // Try to get from IndexedDB cache as fallback
+    try {
+      const cachedData = await getCachedWordsFromIndexedDB();
+      if (cachedData.length > 0) {
+        console.log('[Offline] Utilisation de la cache IndexedDB:', cachedData.length, 'mots');
+        return cachedData;
+      }
+    } catch (dbError) {
+      console.error('IndexedDB fallback failed:', dbError);
+    }
+    
     return [];
+  }
+};
+
+// IndexedDB cache for extra resilience
+const initIndexedDB = async (): Promise<IDBDatabase> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('nzebi-dictionary', 1);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains('words')) {
+        db.createObjectStore('words', { keyPath: 'id' });
+      }
+    };
+  });
+};
+
+const getCachedWordsFromIndexedDB = async (): Promise<Word[]> => {
+  try {
+    const db = await initIndexedDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction('words', 'readonly');
+      const store = transaction.objectStore('words');
+      const request = store.getAll();
+      
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result as Word[]);
+    });
+  } catch (error) {
+    console.error('Error accessing IndexedDB:', error);
+    return [];
+  }
+};
+
+const cacheWordsToIndexedDB = async (words: Word[]): Promise<void> => {
+  try {
+    const db = await initIndexedDB();
+    const transaction = db.transaction('words', 'readwrite');
+    const store = transaction.objectStore('words');
+    
+    // Clear old cache
+    store.clear();
+    
+    // Add new words
+    words.forEach(word => {
+      store.add(word);
+    });
+    
+    return new Promise((resolve, reject) => {
+      transaction.onerror = () => reject(transaction.error);
+      transaction.oncomplete = () => resolve();
+    });
+  } catch (error) {
+    console.error('Error caching to IndexedDB:', error);
   }
 };
 
 const loadAllWordsInternal = async (): Promise<Word[]> => {
   const wordsFromJson = await loadWordsFromJson();
   if (wordsFromJson.length > 0) {
+    // Cache words to IndexedDB for offline access
+    await cacheWordsToIndexedDB(wordsFromJson);
     console.log(`Dictionnaire chargé: ${wordsFromJson.length} mots depuis dictionnaire.json`);
     return wordsFromJson;
   }

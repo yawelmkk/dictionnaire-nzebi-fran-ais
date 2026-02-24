@@ -16,6 +16,22 @@ export default defineConfig(({ mode }) => {
       host: "::",
       port: 8080
     },
+    build: {
+      rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, 'index.html'),
+          sw: path.resolve(__dirname, 'src/service-worker.ts'),
+        },
+        output: {
+          entryFileNames: (chunkInfo) => {
+            if (chunkInfo.name === 'sw') {
+              return 'service-worker.js';
+            }
+            return 'assets/[name]-[hash].js';
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

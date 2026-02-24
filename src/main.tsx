@@ -9,6 +9,19 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
+// Register Service Worker for offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+      .then((registration) => {
+        console.log('[SW] Registration successful:', registration);
+      })
+      .catch((error) => {
+        console.error('[SW] Registration failed:', error);
+      });
+  });
+}
+
 // remove splash screen once React has mounted, but ensure a minimum visible duration
 (() => {
   const MIN_DISPLAY = 600; // milliseconds
