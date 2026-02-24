@@ -164,6 +164,11 @@ export default function Index({ searchTerm }: IndexProps) {
     }
   }, []);
 
+  // React to search term changes
+  useEffect(() => {
+    resetAndLoadWords();
+  }, [searchTerm]);
+
   useEffect(() => {
     if (words.length > 0 && !isInitialLoad && !scrollRestoredRef.current) {
       const lastWordId = localStorage.getItem(LAST_WORD_ID_KEY);

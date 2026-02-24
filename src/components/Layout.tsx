@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect, useRef } from 'react';
 import { 
   DropdownMenu,
   DropdownMenuTrigger,
@@ -33,6 +33,8 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) => {
   const navigate = useNavigate();
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [displayedSearchTerm, setDisplayedSearchTerm] = useState(searchTerm);
   const [settingsClickCount, setSettingsClickCount] = useState(0);
   const [lastClickTime, setLastClickTime] = useState(0);
   const [versionClickCount, setVersionClickCount] = useState(0);
@@ -44,6 +46,21 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
   const [formKey, setFormKey] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Handle debounced search
+  const handleSearchChange = (value: string) => {
+    setDisplayedSearchTerm(value);
+    
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    // Set new timer with 300ms debounce
+    debounceTimerRef.current = setTimeout(() => {
+      setSearchTerm(value);
+    }, 300);
+  };
+
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -52,7 +69,15 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
       setIsDarkMode(true);
       document.body.classList.add('dark');
     }
+    
+    // Sync external searchTerm changes
+    setDisplayedSearchTerm(searchTerm);
   }, []);
+
+  // Sync when searchTerm prop changes externally
+  useEffect(() => {
+    setDisplayedSearchTerm(searchTerm);
+  }, [searchTerm]);
 
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
@@ -376,13 +401,13 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm }) 
             <input
               type="text"
               placeholder="Rechercher un mot en nzébi ou en français..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              value={displayedSearchTerm}
+              onChange={e => handleSearchChange(e.target.value)}
               className="search-input pl-10 py-3 text-base"
             />
-            {searchTerm && (
+            {displayedSearchTerm && (
               <button
-                onClick={() => setSearchTerm('')}
+                onClick={() => handleSearchChange('')}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-lg hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20 transition-colors duration-200"
                 aria-label="Effacer la recherche"
               >

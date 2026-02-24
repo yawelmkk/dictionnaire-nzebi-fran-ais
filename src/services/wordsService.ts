@@ -17,6 +17,35 @@ export interface Word {
 
 const LOCAL_STORAGE_KEY = 'nzebi_dictionary_words';
 let cachedAllWords: Word[] | null = null;
+let searchIndexMap: Map<string, Word[]> | null = null;
+
+const buildSearchIndex = (words: Word[]): Map<string, Word[]> => {
+  const index = new Map<string, Word[]>();
+  
+  words.forEach(word => {
+    // Index nzebi words
+    const nzebiLower = word.nzebi_word.toLowerCase();
+    for (let i = 1; i <= nzebiLower.length; i++) {
+      const prefix = nzebiLower.substring(0, i);
+      if (!index.has(prefix)) {
+        index.set(prefix, []);
+      }
+      index.get(prefix)!.push(word);
+    }
+    
+    // Index french words
+    const frenchLower = word.french_word.toLowerCase();
+    for (let i = 1; i <= frenchLower.length; i++) {
+      const prefix = frenchLower.substring(0, i);
+      if (!index.has(prefix)) {
+        index.set(prefix, []);
+      }
+      index.get(prefix)!.push(word);
+    }
+  });
+  
+  return index;
+};
 
 const loadWordsFromLocal = (): Word[] => {
   try {
@@ -148,6 +177,8 @@ const cacheWordsToIndexedDB = async (words: Word[]): Promise<void> => {
 const loadAllWordsInternal = async (): Promise<Word[]> => {
   const wordsFromJson = await loadWordsFromJson();
   if (wordsFromJson.length > 0) {
+    // Build search index for performance
+    searchIndexMap = buildSearchIndex(wordsFromJson);
     // Cache words to IndexedDB for offline access
     await cacheWordsToIndexedDB(wordsFromJson);
     console.log(`Dictionnaire chargé: ${wordsFromJson.length} mots depuis dictionnaire.json`);
@@ -186,12 +217,26 @@ export const getWordsPaginated = async (
   
   let filteredWords = allWords;
   if (searchTerm.trim()) {
-    const searchLower = searchTerm.toLowerCase();
-    filteredWords = allWords.filter(
-      word =>
-        word.nzebi_word.toLowerCase().includes(searchLower) ||
-        word.french_word.toLowerCase().includes(searchLower)
-    );
+    const searchLower = searchTerm.toLowerCase().trim();
+    
+    // Use search index if available for faster lookups
+    if (searchIndexMap && searchIndexMap.has(searchLower)) {
+      const indexedResults = searchIndexMap.get(searchLower) || [];
+      // Remove duplicates while preserving order
+      const uniqueIds = new Set<string>();
+      filteredWords = indexedResults.filter(word => {
+        if (uniqueIds.has(word.id)) return false;
+        uniqueIds.add(word.id);
+        return true;
+      });
+    } else {
+      // Fallback: basic filtering if index not available
+      filteredWords = allWords.filter(
+        word =>
+          word.nzebi_word.toLowerCase().includes(searchLower) ||
+          word.french_word.toLowerCase().includes(searchLower)
+      );
+    }
   }
   
   // On renvoie tous les mots filtrés, sans pagination, pour s'assurer
