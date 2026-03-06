@@ -1,7 +1,9 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { getCategoryName } from '@/lib/dictionaryData';
-import { ChevronDown, Star } from 'lucide-react';
+import { ChevronDown, Star, Volume2 } from 'lucide-react';
 import { Word } from '@/services/wordsService';
+import { useAudio } from '@/hooks/use-audio';
+import { generateAudioUrl } from '@/services/audioRoutes';
 
 interface WordCardProps {
   word: Word;
@@ -13,6 +15,15 @@ interface WordCardProps {
 }
 
 const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile, isExpanded, onToggleExpand }: WordCardProps) => {
+  const audio = useAudio({ wordId: word.nzebi_word });
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    if (word.nzebi_word) {
+      audio.checkAudio();
+    }
+  }, [word.nzebi_word]);
+
   const handleClick = () => {
     onToggleExpand(word.id);
   };
@@ -55,6 +66,52 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile, isExpande
           )}
         </div>
         <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+            <button
+            onClick={async (e) => {
+              e.stopPropagation();
+              setIsPlaying(true);
+              try {
+                const audioUrl = generateAudioUrl(word.nzebi_word);
+                const audioEl = new Audio(audioUrl);
+                audioEl.onended = () => setIsPlaying(false);
+                audioEl.onerror = () => {
+                  setIsPlaying(false);
+                  if (word.url_prononciation) {
+                    const fallback = new Audio(word.url_prononciation);
+                    fallback.onended = () => setIsPlaying(false);
+                    fallback.play().catch(err => {
+                      console.error('Erreur de lecture audio:', err);
+                      setIsPlaying(false);
+                    });
+                  }
+                };
+                await audioEl.play().catch(err => {
+                  setIsPlaying(false);
+                  if (word.url_prononciation) {
+                    const fallback = new Audio(word.url_prononciation);
+                    fallback.onended = () => setIsPlaying(false);
+                    fallback.play().catch(e => {
+                      console.error('Erreur de lecture audio:', e);
+                      setIsPlaying(false);
+                    });
+                  } else {
+                    console.error('Erreur de lecture audio:', err);
+                  }
+                });
+              } catch (err) {
+                console.error('Erreur lecture audio', err);
+                setIsPlaying(false);
+              }
+            }}
+            disabled={isPlaying}
+            className={`p-1.5 md:p-2 rounded-lg transition-transform duration-150 active:scale-90
+              ${isPlaying ? 'opacity-50 cursor-not-allowed' : ''}
+              ${audio.hasAudio === false && !word.url_prononciation ? 'opacity-30' : ''}`}
+            aria-label="Écouter la prononciation"
+          >
+            <Volume2 size={20} />
+          </button>
+
           <button
             onClick={(e) => {
               e.stopPropagation();

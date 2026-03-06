@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAllWords, Word } from '@/services/wordsService';
 import { getCategoryName } from '@/lib/dictionaryData';
+import { useAudio } from '@/hooks/use-audio';
+import { generateAudioUrl } from '@/services/audioRoutes';
 import { ArrowLeft, BookOpen, Volume2, Star, Link as LinkIcon } from 'lucide-react';
 
 const isValueSet = (value: string | boolean | null | undefined): boolean => {
@@ -20,15 +22,23 @@ export default function WordDetail() {
   const [word, setWord] = useState<Word | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  const audio = useAudio({ wordId: word?.nzebi_word || '' });
+
   useEffect(() => {
     loadWord();
     loadFavoriteStatus();
   }, [id]);
 
+  useEffect(() => {
+    if (word?.nzebi_word) {
+      audio.checkAudio();
+    }
+  }, [word?.nzebi_word]);
+
   const loadWord = async () => {
     const words = await getAllWords();
-    const foundWord = words.find(w => w.id === id);
-    setWord(foundWord || null);
+    const found = words.find(w => w.id === id);
+    setWord(found || null);
   };
 
   const loadFavoriteStatus = () => {
@@ -42,15 +52,38 @@ export default function WordDetail() {
   const toggleFavorite = () => {
     const stored = localStorage.getItem('nzebi_favorites');
     const favorites = stored ? new Set<string>(JSON.parse(stored)) : new Set<string>();
-    
     if (isFavorite) {
       favorites.delete(id!);
     } else {
       favorites.add(id!);
     }
-    
     localStorage.setItem('nzebi_favorites', JSON.stringify([...favorites]));
     setIsFavorite(!isFavorite);
+  };
+
+  const playPronunciation = async () => {
+    try {
+      if (word?.nzebi_word) {
+        const audioUrl = generateAudioUrl(word.nzebi_word);
+        const audioEl = new Audio(audioUrl);
+        audioEl.onerror = () => {
+          if (word.url_prononciation) {
+            const fallback = new Audio(word.url_prononciation);
+            fallback.play().catch(err => console.error('Erreur de lecture audio:', err));
+          }
+        };
+        await audioEl.play().catch(err => {
+          if (word.url_prononciation) {
+            const fallback = new Audio(word.url_prononciation);
+            fallback.play().catch(e => console.error('Erreur de lecture audio:', e));
+          } else {
+            console.error('Erreur de lecture audio:', err);
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Erreur de lecture audio:', err);
+    }
   };
 
   if (!word) {
@@ -59,22 +92,12 @@ export default function WordDetail() {
         <p className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary text-lg">
           Mot introuvable
         </p>
-        <button
-          onClick={() => navigate('/')}
-          className="btn-primary mt-4"
-        >
+        <button onClick={() => navigate('/')} className="btn-primary mt-4">
           Retour à l'accueil
         </button>
       </div>
     );
   }
-
-  const playPronunciation = () => {
-    if (word.url_prononciation) {
-      const audio = new Audio(word.url_prononciation);
-      audio.play().catch(error => console.error('Erreur de lecture audio:', error));
-    }
-  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -107,13 +130,16 @@ export default function WordDetail() {
           </div>
 
           <div className="flex items-center gap-2">
-            {isValueSet(word.url_prononciation) && (
+            {(isValueSet(word.url_prononciation) || audio.hasAudio) && (
               <button
                 onClick={playPronunciation}
-                className="p-3 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
+                disabled={audio.isPlaying}
+                className={`p-3 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
                          text-nzebi-primary dark:text-nzebi-accent
                          hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20
-                         active:scale-95 transition-all duration-200"
+                         active:scale-95 transition-all duration-200 ${
+                           audio.isPlaying ? 'opacity-50 cursor-not-allowed' : ''
+                         }`}
                 aria-label="Écouter la prononciation"
               >
                 <Volume2 size={24} />
@@ -124,7 +150,7 @@ export default function WordDetail() {
               className="p-3 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
                        hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20
                        active:scale-95 transition-all duration-200"
-              aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+              aria-label={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
             >
               <Star
                 size={24}
@@ -198,7 +224,7 @@ export default function WordDetail() {
                 <span className="text-sm font-semibold text-nzebi-primary dark:text-nzebi-accent min-w-[110px]">
                   Synonymes :
                 </span>
-                <span className="text-base text-nzebi-text dark:text-nzebi-text-dark">
+                <span className="text-base text-nzebi-text dark:text-nzebi-text-dark font-medium">
                   {word.synonyms}
                 </span>
               </div>
@@ -209,22 +235,25 @@ export default function WordDetail() {
                 <span className="text-sm font-semibold text-nzebi-primary dark:text-nzebi-accent min-w-[110px]">
                   Nom scientifique :
                 </span>
-                <span className="text-base text-nzebi-text dark:text-nzebi-text-dark italic">
+                <span className="text-base text-nzebi-text dark:text-nzebi-text-dark font-medium">
                   {word.scientific_name}
                 </span>
               </div>
             )}
 
-            {isValueSet(word.url_prononciation) && (
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/30">
-                <LinkIcon size={18} className="text-nzebi-primary dark:text-nzebi-accent" />
+            {isValueSet(word.url_definition) && (
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/30">
+                <span className="text-sm font-semibold text-nzebi-primary dark:text-nzebi-accent min-w-[110px]">
+                  Définition :
+                </span>
                 <a
-                  href={word.url_prononciation || '#'}
+                  href={word.url_definition}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-medium text-nzebi-primary dark:text-nzebi-accent hover:underline"
+                  className="inline-flex items-center gap-1 text-nzebi-primary dark:text-nzebi-accent hover:underline"
                 >
-                  Écouter la prononciation
+                  Lire
+                  <LinkIcon size={16} />
                 </a>
               </div>
             )}
