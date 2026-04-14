@@ -129,6 +129,7 @@
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+<<<<<<< HEAD
 
 /* Hide scrollbar for category filter */
 .scrollbar-hide {
@@ -138,3 +139,5 @@ code {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+=======
+>>>>>>> origin/main

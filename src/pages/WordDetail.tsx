@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAllWords, Word } from '@/services/wordsService';
@@ -8,6 +9,23 @@ import { ArrowLeft, BookOpen, Volume2, Star } from 'lucide-react';
 const isValueSet = (value: string | boolean | null | undefined): boolean => {
   if (value === null || value === undefined) return false;
   if (typeof value === 'string') return value.trim() !== '';
+=======
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getAllWords, Word } from '@/services/wordsService';
+import { getCategoryName } from '@/lib/dictionaryData';
+import { useAudio } from '@/hooks/use-audio';
+import { generateAudioUrl } from '@/services/audioRoutes';
+import { ArrowLeft, BookOpen, Volume2, Star } from 'lucide-react';
+
+const isValueSet = (value: string | boolean | null | undefined): boolean => {
+  if (value === null || value === undefined) {
+    return false;
+  }
+  if (typeof value === 'string') {
+    return value.trim() !== '';
+  }
+>>>>>>> origin/main
   return true;
 };
 
@@ -16,6 +34,7 @@ export default function WordDetail() {
   const navigate = useNavigate();
   const [word, setWord] = useState<Word | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+<<<<<<< HEAD
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -32,6 +51,37 @@ export default function WordDetail() {
   }, [id]);
 
   const toggleFavorite = useCallback(() => {
+=======
+
+  const audio = useAudio({ wordId: word?.nzebi_word || '' });
+
+  useEffect(() => {
+    loadWord();
+    loadFavoriteStatus();
+  }, [id]);
+
+  useEffect(() => {
+    if (word?.nzebi_word) {
+      audio.checkAudio();
+    }
+  }, [word?.nzebi_word]);
+
+  const loadWord = async () => {
+    const words = await getAllWords();
+    const found = words.find(w => w.id === id);
+    setWord(found || null);
+  };
+
+  const loadFavoriteStatus = () => {
+    const stored = localStorage.getItem('nzebi_favorites');
+    if (stored) {
+      const favorites = new Set(JSON.parse(stored));
+      setIsFavorite(favorites.has(id!));
+    }
+  };
+
+  const toggleFavorite = () => {
+>>>>>>> origin/main
     const stored = localStorage.getItem('nzebi_favorites');
     const favorites = stored ? new Set<string>(JSON.parse(stored)) : new Set<string>();
     if (isFavorite) {
@@ -41,6 +91,7 @@ export default function WordDetail() {
     }
     localStorage.setItem('nzebi_favorites', JSON.stringify([...favorites]));
     setIsFavorite(!isFavorite);
+<<<<<<< HEAD
   }, [id, isFavorite]);
 
   const handlePlay = useCallback(async () => {
@@ -54,6 +105,34 @@ export default function WordDetail() {
       setIsPlaying(false);
     }
   }, [word, isPlaying]);
+=======
+  };
+
+  const playPronunciation = async () => {
+    try {
+      if (word?.nzebi_word) {
+        const audioUrl = generateAudioUrl(word.nzebi_word);
+        const audioEl = new Audio(audioUrl);
+        audioEl.onerror = () => {
+          if (word.url_prononciation) {
+            const fallback = new Audio(word.url_prononciation);
+            fallback.play().catch(err => console.error('Erreur de lecture audio:', err));
+          }
+        };
+        await audioEl.play().catch(err => {
+          if (word.url_prononciation) {
+            const fallback = new Audio(word.url_prononciation);
+            fallback.play().catch(e => console.error('Erreur de lecture audio:', e));
+          } else {
+            console.error('Erreur de lecture audio:', err);
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Erreur de lecture audio:', err);
+    }
+  };
+>>>>>>> origin/main
 
   if (!word) {
     return (
@@ -99,6 +178,7 @@ export default function WordDetail() {
           </div>
 
           <div className="flex items-center gap-2">
+<<<<<<< HEAD
             <button
               onClick={handlePlay}
               disabled={isPlaying}
@@ -112,6 +192,23 @@ export default function WordDetail() {
             >
               <Volume2 size={24} />
             </button>
+=======
+            {(isValueSet(word.url_prononciation) || audio.hasAudio) && (
+              <button
+                onClick={playPronunciation}
+                disabled={audio.isPlaying}
+                className={`p-3 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
+                         text-nzebi-primary dark:text-nzebi-accent
+                         hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20
+                         active:scale-95 transition-all duration-200 ${
+                           audio.isPlaying ? 'opacity-50 cursor-not-allowed' : ''
+                         }`}
+                aria-label="Écouter la prononciation"
+              >
+                <Volume2 size={24} />
+              </button>
+            )}
+>>>>>>> origin/main
             <button
               onClick={toggleFavorite}
               className="p-3 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
@@ -207,6 +304,10 @@ export default function WordDetail() {
                 </span>
               </div>
             )}
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
           </div>
         )}
       </div>

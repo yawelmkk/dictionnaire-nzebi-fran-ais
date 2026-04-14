@@ -184,8 +184,13 @@ const loadAllWordsInternal = async (): Promise<Word[]> => {
   if (wordsFromJson.length > 0) {
     // Build search index for performance
     searchIndexMap = buildSearchIndex(wordsFromJson);
+<<<<<<< HEAD
     // Cache words to IndexedDB for offline access (fire-and-forget, don't block rendering)
     cacheWordsToIndexedDB(wordsFromJson).catch(err => console.error('IndexedDB cache error:', err));
+=======
+    // Cache words to IndexedDB for offline access
+    await cacheWordsToIndexedDB(wordsFromJson);
+>>>>>>> origin/main
     console.log(`Dictionnaire chargé: ${wordsFromJson.length} mots depuis dictionnaire.json`);
     return wordsFromJson;
   }
