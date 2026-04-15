@@ -15,23 +15,19 @@ function App() {
   const isGithubPages = typeof window !== 'undefined' && /\.github\.io$/i.test(window.location.hostname);
   const Router: React.ComponentType<any> = isGithubPages ? (HashRouter as any) : (BrowserRouter as any);
   const [searchTerm, setSearchTerm] = useState('');
-<<<<<<< HEAD
   const [activeCategory, setActiveCategory] = useState('all');
-=======
->>>>>>> origin/main
   
   return (
     <DisplayProvider>
       <Router basename={isGithubPages ? '/' : basename}>
-<<<<<<< HEAD
         <Layout searchTerm={searchTerm} setSearchTerm={setSearchTerm} activeCategory={activeCategory} onCategoryChange={setActiveCategory}>
           <Routes>
             <Route path="/" element={<Index searchTerm={searchTerm} activeCategory={activeCategory} />} />
-=======
-        <Layout searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
-          <Routes>
-            <Route path="/" element={<Index searchTerm={searchTerm} />} />
->>>>>>> origin/main
+            <Route path="/recherche" element={<Search />} />
+            <Route path="/mot/:id" element={<WordDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Layout>
             <Route path="/recherche" element={<Search />} />
             <Route path="/mot/:id" element={<WordDetail />} />
             <Route path="*" element={<NotFound />} />

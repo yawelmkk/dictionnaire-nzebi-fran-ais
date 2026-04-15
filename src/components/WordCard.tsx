@@ -1,26 +1,14 @@
-<<<<<<< HEAD
 import { memo, useState, useCallback } from 'react';
 import { getCategoryName } from '@/lib/dictionaryData';
 import { Star, Volume2 } from 'lucide-react';
 import { Word } from '@/services/wordsService';
 import { useDisplayMode } from '@/context/DisplayContext';
 import { playWordAudio } from '@/services/audioService';
-=======
-import { memo, useEffect, useState } from 'react';
-import { getCategoryName } from '@/lib/dictionaryData';
-import { Star, Volume2 } from 'lucide-react';
-import { Word } from '@/services/wordsService';
-import { useAudio } from '@/hooks/use-audio';
-import { useDisplayMode } from '@/context/DisplayContext';
-import { generateAudioUrl } from '@/services/audioRoutes';
->>>>>>> origin/main
-
 interface WordCardProps {
   word: Word;
   isFavorite: boolean;
   onToggleFavorite: (wordId: string) => void;
   isMobile: boolean;
-<<<<<<< HEAD
 }
 
 const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCardProps) => {
@@ -44,30 +32,12 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
     e.stopPropagation();
     onToggleFavorite(word.id);
   }, [onToggleFavorite, word.id]);
-=======
-  isExpanded?: boolean;
-  onToggleExpand?: (wordId: string) => void;
-}
-
-const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCardProps) => {
-  const audio = useAudio({ wordId: word.nzebi_word });
-  const { displayMode } = useDisplayMode();
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    if (word.nzebi_word) {
-      audio.checkAudio();
-    }
-  }, [word.nzebi_word]);
->>>>>>> origin/main
-
   return (
     <div
       data-word-id={word.id}
       className={`card-modern p-4 md:p-5 group ${isMobile ? '' : 'animate-fade-in'} hover-scale`}
     >
       <div className="flex flex-col gap-4">
-<<<<<<< HEAD
 =======
         {/* En-tête avec titre et catégorie */}
 >>>>>>> origin/main
@@ -85,47 +55,7 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
 <<<<<<< HEAD
           <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
             <button
-              onClick={handlePlay}
-=======
-          {/* Boutons d'action */}
-          <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
-            <button
-              onClick={async (e) => {
-                e.stopPropagation();
-                setIsPlaying(true);
-                try {
-                  const audioUrl = generateAudioUrl(word.nzebi_word);
-                  console.log('Tentative lecture audio:', audioUrl);
-                  const audioEl = new Audio(audioUrl);
-                  audioEl.onended = () => setIsPlaying(false);
-                  audioEl.onerror = (error) => {
-                    console.error('Erreur audio:', error, 'URL:', audioUrl);
-                    setIsPlaying(false);
-                    if (word.url_prononciation) {
-                      const fallback = new Audio(word.url_prononciation);
-                      fallback.onended = () => setIsPlaying(false);
-                      fallback.play().catch(err => {
-                        console.error('Erreur de lecture audio fallback:', err);
-                        setIsPlaying(false);
-                      });
-                    }
-                  };
-                  await audioEl.play();
-                } catch (err) {
-                  console.error('Erreur lors de la lecture audio:', err);
-                  setIsPlaying(false);
-                  if (word.url_prononciation) {
-                    const fallback = new Audio(word.url_prononciation);
-                    fallback.onended = () => setIsPlaying(false);
-                    fallback.play().catch(e => {
-                      console.error('Erreur de lecture audio fallback:', e);
-                      setIsPlaying(false);
-                    });
-                  }
-                }
-              }}
->>>>>>> origin/main
-              disabled={isPlaying}
+              onClick={handlePlay}              disabled={isPlaying}
               className={`p-1.5 md:p-2 rounded-lg hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20 transition-transform duration-150 active:scale-90 ${
                 isPlaying ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -135,15 +65,7 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
             </button>
 
             <button
-<<<<<<< HEAD
-              onClick={handleToggleFavorite}
-=======
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleFavorite(word.id);
-              }}
->>>>>>> origin/main
-              className="p-1.5 md:p-2 rounded-lg hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20 active:scale-90 transition-transform duration-150"
+              onClick={handleToggleFavorite}              className="p-1.5 md:p-2 rounded-lg hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20 active:scale-90 transition-transform duration-150"
               aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
             >
               <Star
@@ -158,7 +80,6 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
           </div>
         </div>
 
-<<<<<<< HEAD
 =======
         {/* Traduction */}
 >>>>>>> origin/main
@@ -172,39 +93,21 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
             </p>
           </div>
 
-<<<<<<< HEAD
-=======
-          {/* Exemple */}
->>>>>>> origin/main
-          {word.example_nzebi && (
+<<<<<<< HEAD          {word.example_nzebi && (
             <div className="pt-2 border-t border-nzebi-surface dark:border-nzebi-surface-dark">
               <p className="text-xs md:text-sm font-medium text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary uppercase tracking-wide mb-2">
                 Exemple
               </p>
-<<<<<<< HEAD
               <div className="bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/50 rounded p-3">
                 <p className="text-sm md:text-base italic text-nzebi-text dark:text-nzebi-text-dark">
                   "{word.example_nzebi}"
                 </p>
                 <p className="text-xs md:text-sm text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary mt-2">
                   {word.example_french}
-                </p>
-=======
-              <div className="space-y-2">
-                <div className="bg-nzebi-surface/50 dark:bg-nzebi-surface-dark/50 rounded p-3">
-                  <p className="text-sm md:text-base italic text-nzebi-text dark:text-nzebi-text-dark">
-                    "{word.example_nzebi}"
-                  </p>
-                  <p className="text-xs md:text-sm text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary mt-2">
-                    {word.example_french}
-                  </p>
-                </div>
->>>>>>> origin/main
-              </div>
+                </p>              </div>
             </div>
           )}
 
-<<<<<<< HEAD
           {(word.plural_form || word.synonyms || word.scientific_name || word.is_verb || word.imperative) && (
             <div className="pt-2 border-t border-nzebi-surface dark:border-nzebi-surface-dark space-y-2">
               {word.is_verb && (
@@ -226,13 +129,7 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
                     {word.imperative}
                   </p>
                 </div>
-              )}
-=======
-          {/* Informations supplémentaires */}
-          {(word.plural_form || word.synonyms || word.scientific_name) && (
-            <div className="pt-2 border-t border-nzebi-surface dark:border-nzebi-surface-dark space-y-2">
->>>>>>> origin/main
-              {word.plural_form && (
+              )}              {word.plural_form && (
                 <div>
                   <p className="text-xs md:text-sm font-medium text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary uppercase tracking-wide">
                     Pluriel
