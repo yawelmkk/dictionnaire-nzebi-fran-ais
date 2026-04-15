@@ -171,7 +171,6 @@ function WordAudioTest({ word }: WordAudioTestProps) {
     };
 
     testUrls();
-    audio.checkAudio();
   }, [word.id]);
 
   return (
@@ -199,7 +198,7 @@ function WordAudioTest({ word }: WordAudioTestProps) {
         </div>
       )}
 
-      {audio.hasAudio === false && !audio.error && (
+      {!word.url_prononciation && !audio.error && (
         <div className="p-3 mb-4 bg-yellow-50 dark:bg-yellow-900/20 rounded border border-yellow-200 dark:border-yellow-800">
           <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
             <AlertCircle size={18} />
@@ -208,7 +207,7 @@ function WordAudioTest({ word }: WordAudioTestProps) {
         </div>
       )}
 
-      {audio.hasAudio && (
+      {word.url_prononciation && (
         <div className="p-3 mb-4 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
           <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
             <Check size={18} />

@@ -76,7 +76,7 @@ export function AudioWordCard({ word, onClick }: AudioWordCardProps) {
           </p>
         </div>
         
-        {(word.url_prononciation || audio.hasAudio !== false) && (
+        {(word.url_prononciation) && (
           <button
             onClick={handlePlayAudio}
             disabled={audio.isPlaying}
