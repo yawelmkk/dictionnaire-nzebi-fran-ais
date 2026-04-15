@@ -28,11 +28,6 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
-            <Route path="/recherche" element={<Search />} />
-            <Route path="/mot/:id" element={<WordDetail />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
         <Toaster />
       </Router>
     </DisplayProvider>

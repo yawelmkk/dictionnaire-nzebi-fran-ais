@@ -4,6 +4,7 @@ import { useDisplayMode } from '@/context/DisplayContext';
 import Header from '@/components/layout/Header';
 import SearchBar from '@/components/layout/SearchBar';
 import CategoryFilter from '@/components/layout/CategoryFilter';
+
 interface LayoutProps {
   children: ReactNode;
   searchTerm: string;
@@ -23,6 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
     if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     debounceTimerRef.current = setTimeout(() => setSearchTerm(value), 300);
   }, [setSearchTerm]);
+
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -31,6 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
       document.documentElement.classList.add('dark');
     }
   }, []);
+
   useEffect(() => {
     setDisplayedSearchTerm(searchTerm);
   }, [searchTerm]);
@@ -57,7 +60,8 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
       : 'Affichage : Français en premier');
   }, [displayMode, setDisplayMode]);
 
-  const handleAboutClick = useCallback(() => {    toast.info(
+  const handleAboutClick = useCallback(() => {
+    toast.info(
       <div className="flex flex-col gap-3 max-w-2xl">
         <h3 className="font-bold text-lg">Le dictionnaire Nzébi-français</h3>
         <div className="space-y-3 text-sm overflow-y-auto max-h-[500px]">
@@ -70,7 +74,8 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
           <p className="font-semibold">Merci d'utiliser cette application et de soutenir la mission de Langue Nzébi Officiel.</p>
         </div>
         <div className="flex justify-end mt-4">
-          <button            onClick={() => toast.dismiss()}
+          <button
+            onClick={() => toast.dismiss()}
             className="px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-600 transition-colors"
           >
             Retour
@@ -88,6 +93,7 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
   const handleContactClick = useCallback(() => {
     window.location.href = 'mailto:languenzebiofficiel@gmail.com';
   }, []);
+
   return (
     <div className="min-h-screen bg-nzebi-background dark:bg-nzebi-background-dark transition-colors duration-300">
       <div className="sticky top-0 z-50 backdrop-blur-lg bg-white/90 dark:bg-nzebi-background-dark/90 border-b border-nzebi-surface dark:border-nzebi-surface-dark">
@@ -102,84 +108,15 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
         </header>
         <div className="max-w-4xl mx-auto px-4 pb-2 sm:px-6">
           <SearchBar value={displayedSearchTerm} onChange={handleSearchChange} />
-          <CategoryFilter activeCategory={activeCategory} onCategoryChange={onCategoryChange} />        </div>
+          <CategoryFilter activeCategory={activeCategory} onCategoryChange={onCategoryChange} />
+        </div>
       </div>
 
       <main className="max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
         {children}
       </main>
-=======
-
-      <Dialog open={showSecretModal} onOpenChange={setShowSecretModal}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Menu secret : Gestion des mots</DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="mb-2 text-sm font-semibold text-gray-700">
-              Nombre de mots enregistrés : {filteredWords.length}
-            </div>
-            <div className="w-full md:w-1/2 max-h-[60vh] overflow-y-auto border-r pr-4">
-              <div className="flex items-center mb-2 gap-2 sticky top-0 bg-white z-10 py-2 border-b">
-                <input
-                  type="text"
-                  placeholder="Rechercher..."
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  className="w-full border rounded px-2 py-1 text-sm"
-                />
-                <button
-                  className="bg-green-600 text-white rounded p-2 hover:bg-green-700"
-                  onClick={() => { setSelectedWord(null); setFormKey(prev => prev + 1); }}
-                  title="Ajouter un mot"
-                >
-                  +
-                </button>
-              </div>
-              <ul className="divide-y">
-                {filteredWords.map(word => (
-                  <li key={word.id} className="flex items-center justify-between py-2 group">
-                    <span
-                      className="cursor-pointer hover:underline"
-                      onClick={() => handleEditWord(word)}
-                    >
-                      <span className="font-bold text-green-900">{word.nzebi_word}</span> <span className="text-gray-500">({word.french_word})</span>
-                    </span>
-                    <button
-                      className="ml-2 text-red-500 opacity-70 hover:opacity-100"
-                      onClick={() => handleDeleteWord(word.id)}
-                      title="Supprimer"
-                    >
-                      <Trash size={18} />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="w-full md:w-1/2">
-              <WordForm
-                key={formKey}
-                onSubmit={handleAddWord}
-                isSubmitting={isSubmitting}
-                initialValues={selectedWord ? {
-                  nzebi: selectedWord.nzebi_word,
-                  french: selectedWord.french_word,
-                  categoryId: selectedWord.part_of_speech,
-                  exampleNzebi: selectedWord.example_nzebi || '',
-                  exampleFrench: selectedWord.example_french || '',
-                  pluralForm: selectedWord.plural_form || '',
-                  synonyms: selectedWord.synonyms || ''
-                } : undefined}
-                categories={categories}
-              />
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
->>>>>>> origin/main
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default Layout;

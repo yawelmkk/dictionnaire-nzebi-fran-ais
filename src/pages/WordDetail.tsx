@@ -203,10 +203,7 @@ export default function WordDetail() {
                 </span>
               </div>
             )}
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/main
           </div>
         )}
       </div>

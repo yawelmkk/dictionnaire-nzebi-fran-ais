@@ -4,6 +4,7 @@ import { Star, Volume2 } from 'lucide-react';
 import { Word } from '@/services/wordsService';
 import { useDisplayMode } from '@/context/DisplayContext';
 import { playWordAudio } from '@/services/audioService';
+
 interface WordCardProps {
   word: Word;
   isFavorite: boolean;
@@ -32,15 +33,14 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
     e.stopPropagation();
     onToggleFavorite(word.id);
   }, [onToggleFavorite, word.id]);
+
   return (
     <div
       data-word-id={word.id}
       className={`card-modern p-4 md:p-5 group ${isMobile ? '' : 'animate-fade-in'} hover-scale`}
     >
       <div className="flex flex-col gap-4">
-=======
         {/* En-tête avec titre et catégorie */}
->>>>>>> origin/main
         <div className="flex items-start justify-between gap-3 md:gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 md:gap-3 mb-3 flex-wrap">
@@ -52,10 +52,10 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
               </span>
             </div>
           </div>
-<<<<<<< HEAD
           <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
             <button
-              onClick={handlePlay}              disabled={isPlaying}
+              onClick={handlePlay}
+              disabled={isPlaying}
               className={`p-1.5 md:p-2 rounded-lg hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20 transition-transform duration-150 active:scale-90 ${
                 isPlaying ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -65,7 +65,8 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
             </button>
 
             <button
-              onClick={handleToggleFavorite}              className="p-1.5 md:p-2 rounded-lg hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20 active:scale-90 transition-transform duration-150"
+              onClick={handleToggleFavorite}
+              className="p-1.5 md:p-2 rounded-lg hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20 active:scale-90 transition-transform duration-150"
               aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
             >
               <Star
@@ -80,9 +81,7 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
           </div>
         </div>
 
-=======
         {/* Traduction */}
->>>>>>> origin/main
         <div className="space-y-3">
           <div className="border-l-4 border-nzebi-primary dark:border-nzebi-accent pl-3">
             <p className="text-sm md:text-base font-medium text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary">
@@ -93,7 +92,7 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
             </p>
           </div>
 
-<<<<<<< HEAD          {word.example_nzebi && (
+          {word.example_nzebi && (
             <div className="pt-2 border-t border-nzebi-surface dark:border-nzebi-surface-dark">
               <p className="text-xs md:text-sm font-medium text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary uppercase tracking-wide mb-2">
                 Exemple
@@ -104,7 +103,8 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
                 </p>
                 <p className="text-xs md:text-sm text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary mt-2">
                   {word.example_french}
-                </p>              </div>
+                </p>
+              </div>
             </div>
           )}
 
@@ -129,7 +129,8 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
                     {word.imperative}
                   </p>
                 </div>
-              )}              {word.plural_form && (
+              )}
+              {word.plural_form && (
                 <div>
                   <p className="text-xs md:text-sm font-medium text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary uppercase tracking-wide">
                     Pluriel
@@ -170,7 +171,3 @@ const WordCard = memo(({ word, isFavorite, onToggleFavorite, isMobile }: WordCar
 WordCard.displayName = 'WordCard';
 
 export default WordCard;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
