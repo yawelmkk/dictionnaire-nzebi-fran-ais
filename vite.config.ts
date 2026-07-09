@@ -24,7 +24,6 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       rollupOptions: {
         input: path.resolve(__dirname, 'index.html'),
-        external: ['src/service-worker.ts'],
         output: {
           entryFileNames: 'assets/[name].js',
           assetFileNames: (assetInfo) => {
