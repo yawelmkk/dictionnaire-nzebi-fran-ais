@@ -46,10 +46,10 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ activeCategory, onCateg
         <button
           key={cat.id}
           onClick={() => onCategoryChange(cat.id === activeCategory ? 'all' : cat.id)}
-          className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap
+          className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold transition-colors duration-150 whitespace-nowrap border
             ${activeCategory === cat.id
-              ? 'bg-nzebi-primary text-white dark:bg-nzebi-accent dark:text-nzebi-background-dark shadow-sm'
-              : 'bg-nzebi-surface dark:bg-nzebi-surface-dark text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20'
+              ? 'bg-nzebi-accent text-nzebi-background-dark border-transparent'
+              : 'bg-nzebi-surface-dark text-nzebi-text-dark-secondary border-nzebi-divider hover:text-nzebi-text-dark'
             }`}
         >
           {cat.label}

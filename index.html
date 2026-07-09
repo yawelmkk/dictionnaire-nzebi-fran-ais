@@ -93,16 +93,22 @@
 
   <body class="font-sans">
     <div id="splash" class="splash-screen">
-      <img src="./splash-nzebi.png" id="splash-img" alt="Dictionnaire Nzebi-Français - Splash Screen" />
+      <img src="/splash-nzebi.png" id="splash-img" alt="Dictionnaire Nzebi-Français - Splash Screen" />
     </div>
     <div id="root"></div>
 
     <script>
-      // Fix relative path for splash image
+      // Fix splash image path for GitHub Pages sub-path deployments
       (function() {
         const img = document.getElementById('splash-img');
-        if (img && img.src.includes('/')) {
-          img.src = 'splash-nzebi.png';
+        if (img) {
+          const base = (window.__baseUrl || '/').replace(/\/+$/, '/');
+          img.src = base + 'splash-nzebi.png';
+          img.onerror = function () {
+            // last-resort fallback to a relative path
+            img.onerror = null;
+            img.src = 'splash-nzebi.png';
+          };
         }
       })();
     </script>

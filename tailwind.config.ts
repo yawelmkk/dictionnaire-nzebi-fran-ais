@@ -11,27 +11,34 @@ const config: Config = {
       colors: {
         // Couleurs modernes 2024 - Minimalisme Chaleureux
         nzebi: {
-          primary: '#008080', // Vert sarcelle profond
-          'primary-light': '#00A0A0',
-          'primary-dark': '#006666',
-          accent: '#007FFF', // Bleu azur vif
-          'accent-light': '#3399FF',
-          'accent-dark': '#0066CC',
-          surface: '#F5F5F5', // Blanc cassé pour les cartes
-          'surface-dark': '#2A2A2A',
-          background: '#FFFFFF',
-          'background-dark': '#1E1E1E',
-          text: '#1E1E1E',
-          'text-secondary': '#6B7280',
-          'text-dark': '#E5E7EB',
-          'text-dark-secondary': '#9CA3AF',
+          // iOS-style "Terre Nzebi" warm earthen palette
+          primary: '#E8A95B',          // Gold accent (active/headword)
+          'primary-light': '#F0BC7E',
+          'primary-dark': '#C68B3F',
+          accent: '#E8A95B',           // Same gold for dark mode parity
+          'accent-light': '#F0BC7E',
+          'accent-dark': '#C68B3F',
+          surface: '#2B201A',          // Card surface
+          'surface-dark': '#2B201A',
+          'surface-elevated': '#3D2E24',
+          background: '#1A1410',       // App background (dark earth)
+          'background-dark': '#1A1410',
+          text: '#D4CDC4',             // Warm off-white
+          'text-secondary': '#A39689',
+          'text-dark': '#D4CDC4',
+          'text-dark-secondary': '#A39689',
+          divider: '#3D2E24',
         },
+      },
+      fontFamily: {
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'soft': '0 2px 8px rgba(0, 0, 0, 0.08)',
         'soft-lg': '0 4px 16px rgba(0, 0, 0, 0.12)',
         'card': '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 4px 12px rgba(0, 128, 128, 0.15)',
+        'card-hover': '0 4px 12px rgba(232, 169, 91, 0.15)',
       },
       animation: {
         'pop': 'pop 0.2s ease-out',

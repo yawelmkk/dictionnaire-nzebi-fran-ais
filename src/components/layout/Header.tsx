@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sun, Moon, MoreVertical, ArrowLeftRight, Info, Mail, MessageCircle } from 'lucide-react';
+import { MoreVertical, ArrowLeftRight, Info, Mail, MessageCircle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -9,16 +9,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 interface HeaderProps {
-  isDarkMode: boolean;
-  onToggleDarkMode: () => void;
   onSettingsClick: () => void;
   onAboutClick: () => void;
   onContactClick: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
-  isDarkMode,
-  onToggleDarkMode,
   onSettingsClick,
   onAboutClick,
   onContactClick,
@@ -26,19 +22,16 @@ const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-between py-4">
+    <div className="flex items-center justify-between py-3">
       <button
         onClick={() => navigate('/')}
         className="flex items-center space-x-3 group"
       >
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-nzebi-primary to-nzebi-accent flex items-center justify-center shadow-soft group-hover:shadow-card-hover transition-all duration-300">
-          <span className="text-white font-bold text-xl">N</span>
-        </div>
         <div>
-          <h1 className="text-2xl font-bold text-nzebi-text dark:text-nzebi-text-dark">
+          <h1 className="font-serif text-[26px] font-bold italic text-nzebi-accent tracking-tight leading-none">
             Nzébi
           </h1>
-          <p className="text-xs text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary">
+          <p className="text-[11px] uppercase tracking-widest text-nzebi-text-dark-secondary mt-1">
             Dictionnaire
           </p>
         </div>
@@ -46,40 +39,22 @@ const Header: React.FC<HeaderProps> = ({
 
       <div className="flex items-center space-x-2">
         <button
-          onClick={onToggleDarkMode}
-          className="p-2.5 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
-                   text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary
-                   hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20
-                   hover:text-nzebi-primary dark:hover:text-nzebi-accent
-                   transition-all duration-300"
-          aria-label={isDarkMode ? "Mode clair" : "Mode sombre"}
-        >
-          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
-        <button
           onClick={onSettingsClick}
-          className="p-2.5 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark 
-                   text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary
-                   hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20
-                   hover:text-nzebi-primary dark:hover:text-nzebi-accent
-                   transition-all duration-300"
+          className="w-10 h-10 rounded-full bg-nzebi-surface-dark text-nzebi-accent
+                     flex items-center justify-center active:scale-90 transition-transform duration-150"
           aria-label="Changer le mode d'affichage"
         >
-          <ArrowLeftRight size={20} />
+          <ArrowLeftRight size={18} />
         </button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="p-2.5 rounded-xl bg-nzebi-surface dark:bg-nzebi-surface-dark
-                       text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary
-                       hover:bg-nzebi-primary/10 dark:hover:bg-nzebi-accent/20
-                       hover:text-nzebi-primary dark:hover:text-nzebi-accent
-                       transition-all duration-300"
+              className="w-10 h-10 rounded-full bg-nzebi-surface-dark text-nzebi-accent
+                         flex items-center justify-center active:scale-90 transition-transform duration-150"
               aria-label="Menu"
             >
-              <MoreVertical size={20} />
+              <MoreVertical size={18} />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">

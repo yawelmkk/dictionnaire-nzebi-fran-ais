@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { getAllWords, Word } from '@/services/wordsService';
-import { getMatchingPOS } from '@/components/layout/CategoryFilter';import { Search, Loader2 } from 'lucide-react';
+import { getMatchingPOS } from '@/components/layout/CategoryFilter';
+import { Search, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useDisplayMode } from '@/context/DisplayContext';
 import WordCard from '@/components/WordCard';
@@ -34,7 +35,8 @@ export default function Index({ searchTerm, activeCategory }: IndexProps) {
   }, []);
 
   // Load favorites once
-  useEffect(() => {    const stored = localStorage.getItem('nzebi_favorites');
+  useEffect(() => {
+    const stored = localStorage.getItem('nzebi_favorites');
     if (stored) {
       setFavorites(new Set(JSON.parse(stored)));
     }
@@ -81,21 +83,25 @@ export default function Index({ searchTerm, activeCategory }: IndexProps) {
   }, []);
 
   return (
-    <div className={`space-y-4 md:space-y-6 pt-4 md:pt-6 ${isMobile ? '' : 'animate-fade-in'}`}>
-      <div className="space-y-2 md:space-y-3">
-        {sortedWords.map((word) => (          <WordCard
-            key={word.id}
-            word={word}
-            isFavorite={favorites.has(word.id)}
-            onToggleFavorite={toggleFavorite}
-            isMobile={isMobile}
-          />
-        ))}
-      </div>
+    <div className="space-y-4">
+      {sortedWords.length > 0 && (
+        <div className="grouped-list shadow-lg">
+          {sortedWords.map((word) => (
+            <WordCard
+              key={word.id}
+              word={word}
+              isFavorite={favorites.has(word.id)}
+              onToggleFavorite={toggleFavorite}
+              isMobile={isMobile}
+            />
+          ))}
+        </div>
+      )}
 
-      {isLoading && (        <div className="text-center py-8">
-          <Loader2 className="w-8 h-8 animate-spin text-nzebi-primary dark:text-nzebi-accent mx-auto" />
-          <p className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary mt-2">
+      {isLoading && (
+        <div className="text-center py-8">
+          <Loader2 className="w-8 h-8 animate-spin text-nzebi-accent mx-auto" />
+          <p className="text-nzebi-text-dark-secondary mt-2">
             Chargement...
           </p>
         </div>
@@ -103,24 +109,26 @@ export default function Index({ searchTerm, activeCategory }: IndexProps) {
 
       {allWords.length === 0 && !isLoading && (
         <div className="text-center py-16">
-          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-nzebi-primary/10 dark:bg-nzebi-accent/20 flex items-center justify-center">
-            <Search size={40} className="text-nzebi-primary dark:text-nzebi-accent" />
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-nzebi-surface-dark flex items-center justify-center">
+            <Search size={40} className="text-nzebi-accent" />
           </div>
-          <p className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary text-lg">
+          <p className="text-nzebi-text-dark-secondary text-lg">
             Aucun mot disponible
           </p>
         </div>
       )}
 
-      {sortedWords.length === 0 && allWords.length > 0 && !isLoading && (        <div className="text-center py-16">
-          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-nzebi-primary/10 dark:bg-nzebi-accent/20 flex items-center justify-center">
-            <Search size={40} className="text-nzebi-primary dark:text-nzebi-accent" />
+      {sortedWords.length === 0 && allWords.length > 0 && !isLoading && (
+        <div className="text-center py-16">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-nzebi-surface-dark flex items-center justify-center">
+            <Search size={40} className="text-nzebi-accent" />
           </div>
-          <p className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary text-lg">
+          <p className="text-nzebi-text-dark-secondary text-lg">
             Aucun mot trouvé
           </p>
-          <p className="text-nzebi-text-secondary dark:text-nzebi-text-dark-secondary text-sm mt-2">
-            Essayez avec un autre terme ou une autre catégorie          </p>
+          <p className="text-nzebi-text-dark-secondary text-sm mt-2">
+            Essayez avec un autre terme ou une autre catégorie
+          </p>
         </div>
       )}
     </div>

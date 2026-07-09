@@ -17,7 +17,6 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
   const { displayMode, setDisplayMode } = useDisplayMode();
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState(searchTerm);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleSearchChange = useCallback((value: string) => {
     setDisplayedSearchTerm(value);
@@ -26,31 +25,13 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
   }, [setSearchTerm]);
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
+    // Theme is locked to the iOS earthen dark palette.
+    document.documentElement.classList.add('dark');
   }, []);
 
   useEffect(() => {
     setDisplayedSearchTerm(searchTerm);
   }, [searchTerm]);
-
-  const toggleDarkMode = useCallback(() => {
-    setIsDarkMode(prev => {
-      const next = !prev;
-      if (next) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      }
-      return next;
-    });
-  }, []);
 
   const handleToggleDisplayMode = useCallback(() => {
     const newMode = displayMode === 'nzebi-first' ? 'french-first' : 'nzebi-first';
@@ -95,24 +76,22 @@ const Layout: React.FC<LayoutProps> = ({ children, searchTerm, setSearchTerm, ac
   }, []);
 
   return (
-    <div className="min-h-screen bg-nzebi-background dark:bg-nzebi-background-dark transition-colors duration-300">
-      <div className="sticky top-0 z-50 backdrop-blur-lg bg-white/90 dark:bg-nzebi-background-dark/90 border-b border-nzebi-surface dark:border-nzebi-surface-dark">
+    <div className="min-h-screen bg-nzebi-background-dark">
+      <div className="sticky top-0 z-50 backdrop-blur-xl bg-nzebi-background-dark/85 border-b border-nzebi-divider/40">
         <header className="max-w-4xl mx-auto px-4 sm:px-6">
           <Header
-            isDarkMode={isDarkMode}
-            onToggleDarkMode={toggleDarkMode}
             onSettingsClick={handleToggleDisplayMode}
             onAboutClick={handleAboutClick}
             onContactClick={handleContactClick}
           />
         </header>
-        <div className="max-w-4xl mx-auto px-4 pb-2 sm:px-6">
+        <div className="max-w-4xl mx-auto px-4 pb-3 sm:px-6 space-y-3">
           <SearchBar value={displayedSearchTerm} onChange={handleSearchChange} />
           <CategoryFilter activeCategory={activeCategory} onCategoryChange={onCategoryChange} />
         </div>
       </div>
 
-      <main className="max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
+      <main className="max-w-4xl mx-auto px-4 py-5 sm:px-6 sm:py-6">
         {children}
       </main>
     </div>

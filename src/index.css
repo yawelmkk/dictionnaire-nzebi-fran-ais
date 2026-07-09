@@ -12,12 +12,14 @@
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    @apply bg-nzebi-background text-nzebi-text transition-colors duration-300;
+    @apply bg-nzebi-background text-nzebi-text;
+    background-color: #1A1410;
+    color: #D4CDC4;
   }
 
-  /* Mode sombre */
-  body.dark {
-    @apply bg-nzebi-background-dark text-nzebi-text-dark;
+  html.dark, html.dark body {
+    background-color: #1A1410;
+    color: #D4CDC4;
   }
 
   /* Amélioration de la lisibilité sur mobile */
@@ -52,56 +54,48 @@
 }
 
 @layer components {
-  /* Style pour les cartes modernes avec micro-interaction */
+  /* Carte mot — surface chaude unie, séparateurs hairline */
   .card-modern {
-    @apply bg-white rounded-2xl shadow-soft border border-transparent
-           dark:bg-nzebi-surface-dark dark:shadow-none
-           dark:border-nzebi-surface-dark/50;
-    will-change: transform;
+    @apply bg-nzebi-surface-dark border-b border-nzebi-divider;
     content-visibility: auto;
-    contain-intrinsic-size: auto 200px;
-    transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    contain-intrinsic-size: auto 180px;
+    transition: background-color 0.15s ease-out;
   }
 
-  /* Hover uniquement sur desktop */
-  @media (hover: hover) and (pointer: fine) {
-    .card-modern {
-      @apply hover:shadow-card-hover hover:-translate-y-1 dark:hover:shadow-card-hover;
-    }
+  .card-modern:active {
+    @apply bg-nzebi-surface-elevated;
   }
 
-  /* Sur mobile, désactiver les transitions lourdes */
-  @media (max-width: 768px) {
-    .card-modern {
-      transition: none;
-      will-change: auto;
-    }
+  /* Liste groupée style iOS */
+  .grouped-list {
+    @apply rounded-2xl overflow-hidden bg-nzebi-surface-dark;
+  }
+  .grouped-list > .card-modern:last-child {
+    @apply border-b-0;
   }
 
-  /* Input de recherche moderne */
+  /* Champ de recherche iOS */
   .search-input {
-    @apply w-full px-6 py-4 rounded-2xl border-2 border-transparent
-           bg-white shadow-soft text-lg placeholder:text-nzebi-text-secondary/50
-           focus:outline-none focus:ring-2 focus:ring-nzebi-primary focus:border-transparent
-           transition-all duration-300
-           dark:bg-nzebi-surface-dark dark:text-nzebi-text-dark
-           dark:placeholder:text-nzebi-text-dark-secondary/50
-           dark:focus:ring-nzebi-accent;
+    @apply w-full pl-10 pr-10 py-2.5 rounded-xl
+           bg-nzebi-surface-dark text-nzebi-text-dark
+           placeholder:text-nzebi-text-dark-secondary
+           text-sm font-medium
+           focus:outline-none focus:ring-1 focus:ring-nzebi-accent
+           transition-colors duration-150 border-none;
   }
 
   /* Bouton primaire */
   .btn-primary {
-    @apply px-6 py-3 rounded-xl bg-nzebi-primary text-white font-semibold
-           shadow-soft hover:bg-nzebi-primary-light
-           active:scale-95 transition-all duration-200
-           dark:bg-nzebi-accent dark:hover:bg-nzebi-accent-light;
+    @apply px-6 py-3 rounded-xl bg-nzebi-accent text-nzebi-background-dark font-semibold
+           hover:bg-nzebi-accent-light
+           active:scale-95 transition-all duration-150;
   }
 
   /* Badge de catégorie */
   .badge-category {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
-           bg-nzebi-primary/10 text-nzebi-primary border border-nzebi-primary/20
-           dark:bg-nzebi-accent/20 dark:text-nzebi-accent dark:border-nzebi-accent/30;
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold
+           uppercase tracking-widest
+           bg-nzebi-background-dark text-nzebi-text-dark-secondary;
   }
 
   /* Ligne de séparation active pour souligner */
