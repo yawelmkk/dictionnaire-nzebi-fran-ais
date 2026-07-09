@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build:dev": "vite build --mode development",
-    "build": "npx tsc && vite build && npm run clean-dist",
+    "build": "vite build && npm run clean-dist",
     "clean-dist": "node -e \"require('fs').readdirSync('./dist/assets').filter(f => f.endsWith('.ts')).forEach(f => require('fs').unlinkSync(`./dist/assets/${f}`))\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
